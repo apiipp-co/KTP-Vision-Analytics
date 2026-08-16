@@ -120,6 +120,21 @@ def test_vision_request_contains_base64_schema_and_required_provider_parameters(
     assert captured["response_format"]["type"] == "json_schema"
     assert captured["response_format"]["json_schema"]["strict"] is True
     assert captured["provider"]["require_parameters"] is True
+    assert captured["max_tokens"] == 2048
+    assert captured["reasoning"] == {"effort": "none"}
+
+
+def test_classification_request_uses_compact_output_budget():
+    captured = {}
+
+    class Client(OpenRouterClient):
+        def _post(self, payload):
+            captured.update(payload)
+            return AIResponse("{}", self.model, 1, {})
+
+    client = Client("key", "vision/model")
+    client.vision_json(b"image-bytes", "image/jpeg", "system", "ktp_classification", {"type": "object"})
+    assert captured["max_tokens"] == 384
 
 
 def test_prompts_treat_document_text_as_untrusted_and_forbid_guessing():

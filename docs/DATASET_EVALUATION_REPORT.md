@@ -39,14 +39,25 @@ Artifacts:
 
 ## Actual model result
 
-Status: `NOT TESTED — OPENROUTER_API_KEY MISSING`
+Status: `COMPLETED — 20/20 ROWS PROCESSED`
+
+Model: `dots-studio/dots-3-note-preview:free`
+
+Experiment: `eval-20260816T210432Z-7e876b03`
+
+Prompt versions: classification `1.1.0`, OCR `1.1.0`
 
 | Metric | Value |
 | --- | --- |
-| Images submitted to OpenRouter | 0 |
-| Classification accuracy | N/A |
-| Precision/recall/F1 | N/A |
-| OCR exact match/CER | N/A |
-| Latency/cost | N/A |
+| Images evaluated | 20 (10 KTP, 10 non-KTP) |
+| Successfully processed / failed | 20 / 0 |
+| Classification accuracy | 100% |
+| Precision/recall/F1 KTP | 100% / 100% / 100% |
+| Confusion matrix | TP 10, TN 10, FP 0, FN 0 |
+| OCR exact match | 139/140 populated truth fields (99.29%) |
+| Mean character error rate | 0.71% |
+| OCR schema completeness | 77.22% across all 18 fields |
+| Median classification / OCR / total latency | 5.73 s / 15.25 s / 12.77 s |
+| API / JSON errors | 0 / 0 |
 
-No evaluation artifact or model-quality claim is generated without actual inference.
+These measurements apply only to the controlled synthetic-v2.0.0 fixture set. They are evidence that the integration and evaluation pipeline work; they are not a production-quality claim for real photographs or Indonesia's population. Sanitized artifacts are stored under `outputs/`; uploaded image bytes and raw OCR payloads are not persisted.

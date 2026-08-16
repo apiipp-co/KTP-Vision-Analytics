@@ -4,10 +4,9 @@ import plotly.express as px
 import streamlit as st
 
 from src.services.evaluation import load_evaluation_artifacts, operational_error_analysis
-from src.ui_common import configure_page, require_repository, settings, sidebar_notice
+from src.ui_common import page_header, require_repository, settings, sidebar_notice
 
 
-configure_page("Error Analysis")
 sidebar_notice()
 cfg = settings()
 repo = require_repository(cfg.database_url)
@@ -18,8 +17,11 @@ logs = repo.logs()
 evaluation, _metrics = load_evaluation_artifacts()
 analysis = operational_error_analysis(documents, validations, fields, logs, evaluation)
 
-st.title("Error Analysis")
-st.caption("Count dan percentage dihitung dari database/evaluation artifact aktual. Scope dan denominator ditampilkan agar persentase tidak menyesatkan.")
+page_header(
+    "Quality observability",
+    "Make every failure actionable.",
+    "Pahami pola error berdasarkan data aktual, lengkap dengan scope dan denominator agar setiap persentase tetap jujur.",
+)
 
 if analysis.empty:
     st.info("Belum ada data operasional atau hasil inference aktual untuk dianalisis.")

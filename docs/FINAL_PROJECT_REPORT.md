@@ -1,14 +1,14 @@
 # Final Project Report — KTP Vision Analytics
 
-Document date: 16 August 2026
-Project status: locally verified; external AI evaluation and production deployment blocked
+Document date: 17 August 2026
+Project status: locally verified with completed 20-image OpenRouter evaluation; production deployment not yet published
 Repository: apiipp-co/ktp-vision-analytics, private
 
 ## 1. Executive summary
 
 KTP Vision Analytics is a Streamlit system that accepts an authorized identity-document image, verifies the image in memory, classifies it through OpenRouter Vision, calls structured OCR only for an Indonesian KTP, normalizes 18 fields, applies deterministic rules, stores auditable results, and exposes masked analytics.
 
-The local application and automated controls are mature enough for a supervised technical demonstration. It is not yet production-ready because actual OpenRouter model behavior, PostgreSQL connectivity, Streamlit deployment, authentication, encryption, and real-world evaluation have not been verified.
+The local application, automated controls, and synthetic OpenRouter evaluation are mature enough for a supervised technical demonstration. It is not yet production-ready because PostgreSQL connectivity, Streamlit deployment, authentication, encryption, and lawful representative real-world evaluation have not been verified.
 
 ## 2. Background
 
@@ -140,11 +140,11 @@ The evaluation runner verifies manifest schema, consent, file readability, and h
 
 Classification metrics include accuracy, KTP precision, recall, F1, and confusion matrix. OCR metrics include per-field exact match on populated truth, character error rate, completeness, missing fields, and hallucination signals. Runtime metrics include latency and provider-reported usage/cost.
 
-As of this report, all model-performance metrics are N/A because a valid OpenRouter key was unavailable and no prediction artifact exists.
+The versioned synthetic evaluation completed all 20 rows with the configured `dots-studio/dots-3-note-preview:free` model. Classification accuracy, precision, recall, and F1 were 100% on this controlled fixture set. OCR exact match was 139/140 populated ground-truth fields (99.29%), with 0.71% mean CER and 77.22% all-schema-field completeness. These results do not establish performance on real KTP photographs.
 
 ## 15. Results
 
-The latest pre-documentation regression result is 59 passed. Tests cover model contracts, conditional orchestration, retries, malformed responses, image defenses, normalization, validation, persistence, migration, deletion, duplicate semantics, evaluation math, data integrity, masking, safe CSV, injection text, and missing-secret handling.
+The latest regression result is 64 passed. Tests cover model contracts, output/reasoning bounds, conditional orchestration, retries, malformed responses, image defenses, normalization, expiry and NIK/date/gender validation, persistence, migration, deletion, duplicate semantics, evaluation math, data integrity, masking, safe CSV, injection text, and missing-secret handling.
 
 The Streamlit home plus seven page entry points were smoke-tested without exceptions. A real local server returned a healthy endpoint, and three actual non-PII screenshots were retained after visual QA.
 
@@ -152,22 +152,22 @@ Mocks verify application behavior but do not verify model quality. PostgreSQL an
 
 | Test category | Executed | Passed | Failed | Status |
 |---|---:|---:|---:|---|
-| Automated unit/integration tests | 59 | 59 | 0 | PASS |
+| Automated unit/integration tests | 64 | 64 | 0 | PASS |
 | Streamlit entry-point smoke tests | 8 | 8 | 0 | PASS |
-| OpenRouter AI evaluation rows | 0 | 0 | 0 | BLOCKED / N/A |
+| OpenRouter AI evaluation rows | 20 | 20 | 0 | PASS (synthetic fixtures) |
 | Live deployment matrix | 0 | 0 | 0 | BLOCKED / N/A |
 
 ## 16. Error Analysis
 
 The Error Analysis page separates false positives, false negatives, OCR mismatches, missing fields, JSON errors, validation failures, and API failures. Every category includes a count, denominator, percentage, and scope where evidence exists. It does not assign blur, glare, rotation, or other causes unless the manifest or inspected evidence supports that conclusion.
 
-The final red team found and fixed evaluation string-boolean parsing, the OCR completeness population, current error-column selection, analytics filter propagation, duplicate inference, and legacy database migration. Actual model error distributions remain N/A because zero external prediction rows exist.
+The final red team found and fixed evaluation string-boolean parsing, the OCR completeness population, current error-column selection, analytics filter propagation, duplicate inference, legacy database migration, expiry validation, and unbounded model reasoning. The actual synthetic run contained zero classification/API/JSON failures and one OCR exact-field mismatch.
 
 ## 17. Data Analyst Findings
 
 1. Data: 20 synthetic fixtures with balanced 10/10 classes and verified hashes. Analysis: class balance avoids a majority-class accuracy shortcut. Finding: the harness is reproducible. Decision: keep precision, recall, F1, and confusion matrix in addition to accuracy.
 2. Data: six controlled image conditions. Analysis: condition metadata supports slices. Finding: the set exercises pipeline behavior but not population validity. Decision: do not generalize to real KTP performance.
-3. Data: zero prediction rows. Analysis: no numerator, denominator, latency, usage, or cost observations exist. Finding: external model quality is unknown. Decision: report N/A and block score-cap removal.
+3. Data: 20 prediction rows, balanced by class. Analysis: TP=10, TN=10, FP=0, FN=0; 139/140 populated OCR fields matched. Finding: the integration performs strongly on controlled synthetic fixtures. Decision: report these metrics with an explicit no-generalization warning.
 4. Data: local persistence and page tests pass. Analysis: engineering controls work with deterministic inputs. Finding: local readiness is stronger than cloud readiness. Decision: require PostgreSQL and live restart/concurrency testing.
 5. Data: sensitive extracted fields remain in the database. Analysis: UI masking does not protect storage. Finding: production privacy risk remains material. Decision: require RBAC, encryption, retention, and incident controls.
 
@@ -179,13 +179,13 @@ Residual high-impact gaps are application authentication/RBAC, database/backup e
 
 ## 19. Deployment
 
-The intended deployment is Streamlit Community Cloud with Python 3.12 and PostgreSQL. The repository was pushed privately, but the Streamlit GitHub App cannot currently access it. OPENROUTER_API_KEY and production DATABASE_URL were also absent.
+The intended deployment is Streamlit Community Cloud with Python 3.12 and PostgreSQL. The repository is private and account-side publication still requires Streamlit GitHub access plus platform secrets. A local OpenRouter secret is configured but must be rotated because it was previously exposed; a production PostgreSQL URL is not configured.
 
 No live URL is claimed. Deployment completion requires repository authorization, platform secrets, strict pre-deploy checks, build-log inspection, external inference, persistence/restart testing, concurrency checks, safe export checks, and a documented rollback.
 
 ## 20. Limitations
 
-1. Actual OpenRouter classification and OCR behavior is not measured.
+1. OpenRouter behavior is measured only on 20 controlled synthetic fixtures, not a lawful representative real-world dataset.
 2. PostgreSQL and the Streamlit target are not live-tested.
 3. Twenty synthetic fixtures do not represent real camera, demographic, print, damage, or fraud diversity.
 4. Self-reported confidence is uncalibrated.
@@ -197,17 +197,17 @@ No live URL is claimed. Deployment completion requires repository authorization,
 
 | Risk | Impact | Current mitigation | Required next action |
 |---|---|---|---|
-| Model error or hallucination | Wrong identity data | null policy, strict schema, rule layer, review status | Actual evaluation and human review |
+| Model error or hallucination | Wrong identity data | synthetic evaluation, null policy, strict schema, rule layer, review status | Lawful representative evaluation and human review |
 | PII exposure | Legal/security harm | no image persistence, masking, safe export | RBAC, encryption, retention, incident plan |
 | Cost abuse/duplicates | Unplanned spend | hash rejection, bounded retries | Rate limit, quota, budget alerts |
 | Synthetic-only evidence | Misleading performance | explicit N/A metrics and limitations | Lawful representative evaluation |
 | Local database in cloud | Data loss | PostgreSQL adapter | Provision/test durable PostgreSQL |
 | Private repo inaccessible | No deployment | documented blocker | Grant Streamlit app repository access |
 
-Priorities are: first verify the existing core with OpenRouter and PostgreSQL; second add production identity/access/privacy controls; third evaluate on a lawful representative dataset; finally add correction feedback, drift monitoring, rate limits, quotas, and cost alerts.
+Priorities are: first rotate the key and verify PostgreSQL/cloud deployment; second add production identity/access/privacy controls; third evaluate on a lawful representative dataset; finally add correction feedback, drift monitoring, rate limits, quotas, and cost alerts.
 
 ## 22. Conclusion
 
 The project is a credible engineering portfolio artifact and a strong supervised local demonstration. It shows careful boundaries between AI, deterministic validation, storage, analytics, and privacy.
 
-Final recommendation: NEEDS REVISION before production approval. Unblock and verify OpenRouter, deploy with PostgreSQL, add production identity/access/privacy controls, and publish versioned evaluation evidence. Until then, present all model metrics as N/A and any local screenshot as local evidence only.
+Final recommendation: READY FOR SUPERVISED DEMONSTRATION, but NEEDS REVISION before production approval. Rotate the exposed key, deploy with PostgreSQL, add production identity/access/privacy controls, and collect lawful representative evidence. Present the current metrics only as synthetic-fixture results and any local screenshot as local evidence.

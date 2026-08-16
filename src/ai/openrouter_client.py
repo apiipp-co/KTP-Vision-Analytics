@@ -37,9 +37,15 @@ class OpenRouterClient:
 
     def vision_json(self, image_bytes: bytes, mime_type: str, system_prompt: str, schema_name: str, schema: dict) -> AIResponse:
         encoded = base64.b64encode(image_bytes).decode("ascii")
+        # Classification only needs a compact JSON object. Capping output keeps
+        # free/provider-routed models from spending minutes on hidden reasoning
+        # or an unexpectedly long response body.
+        max_tokens = 384 if schema_name == "ktp_classification" else 2048
         payload = {
             "model": self.model,
             "temperature": 0,
+            "max_tokens": max_tokens,
+            "reasoning": {"effort": "none"},
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": [

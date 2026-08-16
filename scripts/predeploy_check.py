@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -37,13 +38,27 @@ def main() -> None:
     missing = [value for value in required if not (ROOT / value).is_file()]
     results.append(check("repository_layout", "PASS" if not missing else "FAIL", f"missing={missing}"))
 
-    forbidden = [ROOT / ".env", ROOT / ".streamlit" / "secrets.toml"]
-    present = [str(path.relative_to(ROOT)) for path in forbidden if path.exists()]
-    results.append(check("secret_files", "PASS" if not present else "FAIL", f"present={present}"))
+    forbidden_names = [".env", ".streamlit/secrets.toml"]
+    tracked_result = subprocess.run(
+        ["git", "ls-files", "--", *forbidden_names], cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    tracked_secrets = [line for line in tracked_result.stdout.splitlines() if line.strip()]
+    local_ignored = [name for name in forbidden_names if (ROOT / name).exists() and name not in tracked_secrets]
+    results.append(check(
+        "secret_files",
+        "PASS" if not tracked_secrets else "FAIL",
+        f"tracked={tracked_secrets}; local_ignored={local_ignored}",
+    ))
 
     leaked: list[str] = []
     patterns = [re.compile(r"sk-or-v1-[A-Za-z0-9_-]{16,}"), re.compile(r"postgres(?:ql)?://[^\s:@]+:[^\s@]+@")]
-    for path in ROOT.rglob("*"):
+    tracked_files_result = subprocess.run(
+        ["git", "ls-files", "-co", "--exclude-standard", "-z"],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    tracked_paths = [ROOT / value for value in tracked_files_result.stdout.split("\0") if value]
+    candidates = tracked_paths if tracked_paths else list(ROOT.rglob("*"))
+    for path in candidates:
         if not path.is_file() or any(part in SKIP_PARTS for part in path.parts) or path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         try:

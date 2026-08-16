@@ -5,20 +5,23 @@ import streamlit as st
 
 from src.analytics.quality import operational_quality
 from src.services.dataset import manifest_summary, validate_manifest
-from src.ui_common import configure_page, require_repository, settings, sidebar_notice
+from src.ui_common import page_header, require_repository, section_header, settings, sidebar_notice
 from src.utils.config import PROJECT_ROOT
 
 
-configure_page("Data Quality")
 sidebar_notice()
 cfg = settings()
 repo = require_repository(cfg.database_url)
-st.title("Data Quality")
+page_header(
+    "Data governance",
+    "Quality starts before inference.",
+    "Validasi dataset evaluasi dan kesehatan data operasional sebelum menginterpretasikan performa model.",
+)
 
 manifest = pd.read_csv(PROJECT_ROOT / "data" / "test_manifest.csv").fillna("")
 _validated, dataset_issues = validate_manifest(manifest, PROJECT_ROOT)
 dataset_summary = manifest_summary(manifest, dataset_issues)
-st.markdown("### Evaluation dataset")
+section_header("Evaluation dataset", "Komposisi, provenance, consent, dan integritas fixture pengujian.", "Synthetic v2")
 cols = st.columns(4)
 cols[0].metric("Images", dataset_summary["total_images"])
 cols[1].metric("Issues", dataset_summary["issue_count"])
@@ -33,7 +36,7 @@ if dataset_issues:
 st.dataframe(manifest[["image_id", "expected_class", "document_type", "source_type", "image_condition",
                        "consent_status", "dataset_version"]], hide_index=True, width="stretch")
 
-st.markdown("### Operational database")
+section_header("Operational database", "Pemeriksaan kualitas data yang telah disimpan selama pemrosesan.", "Continuous checks")
 quality, report = operational_quality(repo.history())
 st.json(quality)
 if report.empty:

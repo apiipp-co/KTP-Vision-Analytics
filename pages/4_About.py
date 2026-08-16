@@ -1,11 +1,14 @@
 import streamlit as st
 
-from src.ui_common import configure_page, sidebar_notice
+from src.ui_common import page_header, sidebar_notice
 
 
-configure_page("About")
 sidebar_notice()
-st.title("About KTP Vision Analytics")
+page_header(
+    "Product principles",
+    "Responsible document intelligence by design.",
+    "KTP Vision memadukan AI multimodal, aturan deterministik, dan kontrol privasi untuk alur dokumen yang transparan.",
+)
 st.markdown("""
 Project portfolio untuk klasifikasi dokumen, OCR multimodal, data quality, dan analytics KTP Indonesia.
 

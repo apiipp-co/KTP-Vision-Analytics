@@ -1,0 +1,127 @@
+{
+  "experiment": {
+    "experiment_id": "eval-20260816T210432Z-7e876b03",
+    "started_at": "2026-08-16T21:04:32.947740+00:00",
+    "completed_at": "2026-08-16T21:04:51.077493+00:00",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "classification_prompt_version": "1.1.0",
+    "ocr_prompt_version": "1.1.0",
+    "dataset_versions": [
+      "synthetic-v2.0.0"
+    ],
+    "manifest": "data/test_manifest.csv",
+    "data_context": "EVALUATION",
+    "resumed_rows": 10,
+    "newly_processed_rows": 10
+  },
+  "metrics": {
+    "total": 20,
+    "processed_successfully": 20,
+    "failed": 0,
+    "accuracy": 1.0,
+    "precision_ktp": 1.0,
+    "recall_ktp": 1.0,
+    "f1_ktp": 1.0,
+    "confusion_matrix": {
+      "tp": 10,
+      "fp": 0,
+      "fn": 0,
+      "tn": 10
+    },
+    "field_exact_match": {
+      "provinsi": 0.9,
+      "kabupaten_kota": null,
+      "nik": 1.0,
+      "nama": 1.0,
+      "tempat_lahir": 1.0,
+      "tanggal_lahir": 1.0,
+      "jenis_kelamin": 1.0,
+      "golongan_darah": null,
+      "alamat": 1.0,
+      "rt": 1.0,
+      "rw": 1.0,
+      "kelurahan_desa": 1.0,
+      "kecamatan": 1.0,
+      "agama": null,
+      "status_perkawinan": null,
+      "pekerjaan": 1.0,
+      "kewarganegaraan": 1.0,
+      "berlaku_hingga": 1.0
+    },
+    "ocr_data_completeness": 0.7722222222222223,
+    "missing_field_rate": 0.22777777777777775,
+    "error_analysis": [
+      {
+        "error_type": "False Positive",
+        "count": 0,
+        "percentage": 0.0
+      },
+      {
+        "error_type": "False Negative",
+        "count": 0,
+        "percentage": 0.0
+      },
+      {
+        "error_type": "OCR Error",
+        "count": 1,
+        "percentage": 5.0
+      },
+      {
+        "error_type": "Missing Field",
+        "count": 10,
+        "percentage": 50.0
+      },
+      {
+        "error_type": "JSON Error",
+        "count": 0,
+        "percentage": 0.0
+      },
+      {
+        "error_type": "Validation Error",
+        "count": 0,
+        "percentage": 0.0
+      },
+      {
+        "error_type": "API Error",
+        "count": 0,
+        "percentage": 0.0
+      }
+    ]
+  },
+  "condition_analysis": [
+    {
+      "image_condition": "BLUR",
+      "sample_count": 2,
+      "classification_accuracy": 1.0
+    },
+    {
+      "image_condition": "CLEAR",
+      "sample_count": 4,
+      "classification_accuracy": 1.0
+    },
+    {
+      "image_condition": "DARK",
+      "sample_count": 4,
+      "classification_accuracy": 1.0
+    },
+    {
+      "image_condition": "LOW_RESOLUTION",
+      "sample_count": 4,
+      "classification_accuracy": 1.0
+    },
+    {
+      "image_condition": "PARTIALLY_CROPPED",
+      "sample_count": 2,
+      "classification_accuracy": 1.0
+    },
+    {
+      "image_condition": "ROTATED",
+      "sample_count": 4,
+      "classification_accuracy": 1.0
+    }
+  ],
+  "privacy": {
+    "ocr_values_masked_in_export": true,
+    "raw_images_persisted": false
+  }
+}

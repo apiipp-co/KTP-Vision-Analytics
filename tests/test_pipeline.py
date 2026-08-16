@@ -43,7 +43,8 @@ def test_non_ktp_stops_before_ocr(monkeypatch, tmp_path):
 def test_ktp_runs_ocr_normalizes_validates_and_saves(monkeypatch, tmp_path):
     service, repo = pipeline(tmp_path)
     monkeypatch.setattr("src.services.pipeline.classify_document", lambda *_: ClassificationResult(True, "KTP_INDONESIA", None, "ktp", "fake", "1", 1, {}))
-    fields = {"nik": "3273011505900001", "tanggal_lahir": "15/05/1990", "jenis_kelamin": "laki laki", "nama": "Data Uji"}
+    fields = {"nik": "3273011505900001", "tanggal_lahir": "15/05/1990", "jenis_kelamin": "laki laki",
+              "nama": "Data Uji", "berlaku_hingga": "seumur hidup"}
     monkeypatch.setattr("src.services.pipeline.extract_ktp", lambda *_: OCRResult(fields, {"model": "fake", "duration_ms": 2, "usage": {}, "parse_status": "SUCCESS"}))
     result = service.process("ktp.jpg", fixture_image())
     assert result.fields["tanggal_lahir"] == "1990-05-15"

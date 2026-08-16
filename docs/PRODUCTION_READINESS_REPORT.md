@@ -1,12 +1,14 @@
 # Production Readiness Report
 
+> Updated evidence note, 17 August 2026: OpenRouter evaluation now completed 20/20 synthetic rows with no API/JSON failures, and the regression suite passes 64 tests. Cloud/PostgreSQL deployment and real-PII production controls remain unverified.
+
 Status: `DEPLOYMENT BLOCKED`
 
 | Area | Score | Evidence/status |
 | --- | ---: | --- |
 | Build stability | 10/10 | Local dependency/test execution passes |
 | Runtime stability | 9/10 | AppTest: home + 7 pages, zero exceptions; local health `ok`/HTTP 200; cloud unavailable |
-| OpenRouter integration | 7/10 | Request contract/error tests pass; valid-key live inference blocked |
+| OpenRouter integration | 9/10 | 20/20 synthetic rows processed; 100% controlled-fixture classification; no API/JSON failures |
 | Database persistence | 8/10 | SQLite tested; PostgreSQL adapter implemented; credential/live restart blocked |
 | Security | 9/10 | Secret scan, safe SQL/log/export/image controls pass |
 | Privacy | 9/10 | Consent/disclosure, masking, demo mode, no image persistence |
@@ -28,8 +30,8 @@ Do not add a URL, badge, screenshot, accuracy, persistence result or live-test p
 
 Latest local evidence:
 
-- `python -m pytest -q`: 59 passed in the working environment.
-- Clean virtual environment install from `requirements-dev.txt` + tests: 59 passed.
+- `python -m pytest -q`: 64 passed in the working environment.
+- Previous clean-environment verification passed; rerun it at the release commit before cloud publication.
 - `python -m compileall`: PASS.
 - Streamlit AppTest: 8/8 entrypoints, zero exceptions.
 - Local Streamlit server: health `ok`, root HTTP 200.

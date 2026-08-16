@@ -4,9 +4,9 @@
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.38%2B-FF4B4B)
-![Tests](https://img.shields.io/badge/tests-59%20passed-success)
-![AI evaluation](https://img.shields.io/badge/AI%20evaluation-N%2FA-lightgrey)
-![Deployment](https://img.shields.io/badge/deployment-blocked-orange)
+![Tests](https://img.shields.io/badge/tests-64%20passed-success)
+![AI evaluation](https://img.shields.io/badge/AI%20evaluation-20%2F20-success)
+![Deployment](https://img.shields.io/badge/deployment-ready%2C%20not%20published-orange)
 
 KTP Vision Analytics is a production-oriented Streamlit application that classifies an uploaded image before conditionally extracting 18 KTP fields. It then normalizes the output, applies transparent Python rules, stores auditable results, and presents privacy-aware analytics.
 
@@ -143,6 +143,7 @@ Implemented validation:
 | Encoded birth date | Parses day/month/year, including the female day offset | VALID, INVALID, NOT_CHECKED |
 | Birth-date consistency | Compares OCR date with the NIK-derived date | VALID, INVALID, NOT_CHECKED |
 | Gender consistency | Compares OCR gender with the NIK-derived gender | VALID, INVALID, NOT_CHECKED |
+| Validity/expiry status | Accepts SEUMUR HIDUP or checks the printed expiry date against today | VALID, INVALID, NOT_CHECKED |
 | Region code | Checks an imported official six-digit reference only | VALID, INVALID, NOT_CHECKED |
 | Field/category checks | Date, gender, citizenship, name, and address | VALID, INVALID, NOT_CHECKED |
 | Overall status | Critical invalid means INVALID; incomplete critical evidence means REVIEW_REQUIRED | VALID, INVALID, REVIEW_REQUIRED |
@@ -232,7 +233,7 @@ Run the dataset generator:
 
     python scripts/generate_synthetic_dataset.py
 
-Run a real OpenRouter evaluation only after adding a valid key:
+Run an actual OpenRouter evaluation after adding a valid key:
 
     python scripts/evaluate.py
 
@@ -248,27 +249,28 @@ The runner validates the manifest, consent, readability, and hashes first. It th
 
 Current external results:
 
-| Metric | Result | Reason |
+| Metric | Result | Evidence |
 |---|---:|---|
-| Classification accuracy/precision/recall/F1 | N/A | No valid OpenRouter credential was available |
-| OCR field accuracy/CER/completeness | N/A | No model prediction rows exist |
-| External latency/tokens/cost | N/A | No paid evaluation was executed |
+| Classification accuracy/precision/recall/F1 | 100% / 100% / 100% / 100% | 20/20 synthetic fixtures; confusion matrix TP=10, TN=10, FP=0, FN=0 |
+| OCR exact match / mean CER / completeness | 99.29% / 0.71% / 77.22% | 139/140 populated ground-truth fields matched; completeness spans all 18 schema fields |
+| Median classification / OCR / total latency | 5.73 s / 15.25 s / 12.77 s | Observed OpenRouter durations; total median includes ten classification-only non-KTP rows |
+| API/JSON failures | 0 / 0 | Final resumable evaluation run completed all 20 rows |
 | Dataset integrity | PASS | 20/20 synthetic files, labels, hashes, consent fields, and ground truth validated |
 
 Five evidence-based findings:
 
-1. Finding: the dataset is internally reproducible. Evidence: all 20 manifest rows and SHA-256 values validate. Interpretation: the evaluation harness is ready, not the model score. Action: preserve version/hash metadata for every future run.
-2. Finding: classes are balanced 10/10. Evidence: manifest counts. Interpretation: simple accuracy will not hide a majority-class baseline here. Action: still report precision, recall, F1, and the confusion matrix.
-3. Finding: six image conditions are represented. Evidence: manifest condition counts. Interpretation: the fixtures exercise code paths but remain visually synthetic. Action: add lawful, consented, anonymized real-world diversity before production claims.
-4. Finding: no AI prediction artifact exists. Evidence: no evaluation_results.csv or evaluation_summary.json from an API run. Interpretation: any non-N/A model metric would be fabricated. Action: execute the paid evaluation with a valid key and record model/prompt/dataset versions.
-5. Finding: production deployment is blocked. Evidence: Streamlit Cloud cannot access the private repository and required secrets are absent. Interpretation: local readiness is not live readiness. Action: grant repository access, provision secrets/PostgreSQL, deploy, and execute the live matrix.
+1. Finding: the dataset is internally reproducible. Evidence: all 20 manifest rows and SHA-256 values validate. Interpretation: the measured run can be repeated against the same fixtures. Action: preserve version/hash metadata for every future run.
+2. Finding: classification separated all synthetic classes. Evidence: TP=10, TN=10, FP=0, FN=0. Interpretation: the configured model routes this controlled fixture set correctly. Action: do not generalize 100% synthetic accuracy to real KTP photographs.
+3. Finding: OCR matched 139 of 140 populated truth fields. Evidence: mean CER 0.71%, with the only exact mismatch in `provinsi`. Interpretation: structured extraction is strong on these fixtures but not flawless. Action: keep deterministic validation and human review.
+4. Finding: non-KTP routing saves an OCR request. Evidence: all ten non-KTP rows stopped after classification. Interpretation: the classification gate reduces unnecessary inference and PII extraction. Action: retain this invariant in regression tests.
+5. Finding: public deployment remains external work. Evidence: no live URL or production PostgreSQL connection is available. Interpretation: local readiness is not live readiness. Action: rotate the exposed key, provision platform secrets/PostgreSQL, publish, and run the live matrix.
 
 ## Testing
 
-Latest verified local result before final packaging:
+Latest verified local result:
 
     python3 -m pytest -q
-    59 passed
+    64 passed
 
 Coverage includes:
 
@@ -280,7 +282,7 @@ Coverage includes:
 - dataset manifests, hashes, ground truth, metrics, and CSV boolean handling;
 - masking, safe export, PII/log constraints, and evaluation/production data separation.
 
-The AI client is mocked in automated tests. Therefore 59 passing tests prove application behavior, not OpenRouter model accuracy. CI uses Python 3.12, installs requirements-dev.txt, runs tests, then runs the pre-deployment audit.
+The AI client is mocked in automated tests. Therefore 64 passing tests prove application behavior; the separate 20-image artifact records actual OpenRouter behavior on synthetic fixtures. CI uses Python 3.12, installs requirements-dev.txt, runs tests, then runs the pre-deployment audit.
 
 ## Technology stack and project structure
 
@@ -344,7 +346,7 @@ Environment variables:
 | Variable | Default/example | Purpose |
 |---|---|---|
 | OPENROUTER_API_KEY | empty | Required for actual AI requests |
-| OPENROUTER_MODEL | google/gemini-2.5-flash | Vision model with structured-output support |
+| OPENROUTER_MODEL | dots-studio/dots-3-note-preview:free | Vision model verified with strict structured output; free availability may change |
 | DATABASE_URL | sqlite:///data/ktp_vision.db | SQLite local or PostgreSQL target |
 | OPENROUTER_TIMEOUT_SECONDS | 90 | Request timeout |
 | OPENROUTER_MAX_RETRIES | 2 | Bounded retries for transient failures |
@@ -371,12 +373,12 @@ For production prerequisites:
 
 Target: Streamlit Community Cloud, app.py, Python 3.12, PostgreSQL, secrets stored in platform settings.
 
-Current status: BLOCKED, not deployed.
+Current status: READY FOR ACCOUNT-SIDE DEPLOYMENT, not yet published.
 
 - The Streamlit account is authenticated, but its GitHub App cannot see the private repository.
-- No valid OPENROUTER_API_KEY was available for final verification.
+- Local OpenRouter connectivity and single-document classification/OCR have been verified; the deployment still needs a fresh rotated secret.
 - No production PostgreSQL DATABASE_URL was available.
-- Consequently there is no live URL, live screenshot, external model metric, or production persistence claim.
+- Consequently there is no live URL, production PostgreSQL persistence claim, or cloud runtime evidence. The repository does include a completed local 20-image OpenRouter evaluation.
 
 Resolution sequence:
 

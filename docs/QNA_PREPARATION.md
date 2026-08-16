@@ -1,6 +1,6 @@
 # Jury Q&A Preparation
 
-Use short answers first, then expand only when asked. Never replace N/A with an estimate.
+Use short answers first, then expand only when asked. Report measured synthetic results with their scope; never replace unavailable production evidence with an estimate.
 
 ## Problem and product
 
@@ -150,11 +150,11 @@ It avoids exposing real PII and makes the repository reproducible. It is deliber
 
 ### 35. What is the current classification accuracy?
 
-N/A. No valid OpenRouter credential was available and no prediction artifact exists.
+100% on the 20-image balanced synthetic-v2.0.0 set: TP 10, TN 10, FP 0, FN 0. This is controlled integration evidence, not an estimate of real-world KTP accuracy.
 
 ### 36. Why should we trust a project with no model score?
 
-Trust the demonstrated engineering controls and reproducibility, not unmeasured model quality. The next required gate is a versioned paid evaluation.
+Trust the demonstrated controls, reproducibility, and versioned synthetic run. Production trust still requires a lawful representative dataset, human review, and live operational evidence.
 
 ### 37. Which metrics will you report?
 
@@ -218,7 +218,7 @@ The code supports record deletion, but the organization must define and enforce 
 
 ### 51. Is there a live URL?
 
-No. Streamlit Cloud cannot see the private repository and the required AI/database secrets are absent.
+No. The local app and OpenRouter evaluation work, but Streamlit Cloud publication and production PostgreSQL are not yet configured.
 
 ### 52. Why not make the repository public immediately?
 
@@ -226,15 +226,15 @@ Visibility is an owner/security decision. The correct action is to grant scoped 
 
 ### 53. What remains before deployment?
 
-Repository authorization, OpenRouter key, PostgreSQL URL, strict pre-deploy pass, successful build, external inference, persistence/restart, concurrency, privacy, and rollback verification.
+Repository authorization, a rotated OpenRouter key, PostgreSQL URL, successful cloud build, persistence/restart, concurrency, privacy, and rollback verification. The local strict pre-deploy check and synthetic inference already pass.
 
 ### 54. Is the project production-ready?
 
-No. It is locally verified and portfolio-ready, but needs external evaluation, deployment proof, RBAC, encryption, and retention controls.
+No. It is locally verified and portfolio-ready with synthetic model evidence, but still needs deployment proof, lawful representative evaluation, RBAC, encryption, and retention controls.
 
 ### 55. What would you do first with one more day?
 
-Unblock scoped repository access and secrets, execute the 20-image evaluation, deploy with PostgreSQL, and collect dated live evidence.
+Rotate the exposed key, unblock scoped repository access, deploy with PostgreSQL, and collect dated live evidence.
 
 ### 56. What would you do with one more sprint?
 
@@ -250,7 +250,7 @@ Uncertainty and responsibility are separated: classification gates OCR, extracti
 
 ### 59. What is the biggest weakness?
 
-Core external behavior is unmeasured: no real OpenRouter prediction set and no live PostgreSQL-backed deployment.
+The largest gap is external validity and production infrastructure: the model was measured only on synthetic fixtures, and there is no live PostgreSQL-backed deployment.
 
 ### 60. What decision are you asking the jury to make?
 

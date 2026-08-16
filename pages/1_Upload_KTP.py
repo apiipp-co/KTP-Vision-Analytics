@@ -11,21 +11,48 @@ from src.ai.openrouter_client import OpenRouterClient, OpenRouterError
 from src.processing.image_processor import ImageValidationError
 from src.processing.json_parser import JSONParseError
 from src.services.pipeline import DocumentPipeline, DuplicateDocumentError
-from src.ui_common import configure_page, require_repository, settings, sidebar_notice
+from src.ui_common import page_header, require_repository, section_header, settings, sidebar_notice
 from src.utils.constants import IDENTITY_FIELDS
 from src.utils.security import mask_identity_field, safe_filename, sha256_bytes
 
 
-configure_page("Upload KTP")
 sidebar_notice()
 cfg = settings()
 repo = require_repository(cfg.database_url)
 
-st.title("Upload & Process Document")
-st.warning("Dokumen identitas memuat data pribadi. Gunakan hanya dokumen milik sendiri/yang Anda berhak proses. Untuk demo publik, gunakan data sintetis atau anonim.")
-st.caption("Gambar dikirim melalui OpenRouter ke provider AI eksternal untuk klasifikasi/OCR, diproses di memori, dan tidak disimpan sebagai file oleh aplikasi ini.")
-consent = st.checkbox("Saya menyatakan memiliki hak/izin untuk memproses dokumen ini dan memahami penggunaan layanan AI eksternal.")
+page_header(
+    "Document workspace",
+    "Scan smarter. Validate with confidence.",
+    "Unggah dokumen, jalankan klasifikasi dan OCR terstruktur, lalu tinjau setiap aturan validasi dalam satu workspace.",
+)
+workflow_placeholder = st.empty()
+
+
+def render_workflow(active_step: int) -> None:
+    labels = ("Upload document", "AI processing", "Review result")
+    steps = "".join(
+        f'<div class="workflow-step{" active" if number == active_step else ""}"><b>{number}</b><span>{label}</span></div>'
+        for number, label in enumerate(labels, start=1)
+    )
+    workflow_placeholder.markdown(
+        f'<div class="workflow-rail" aria-label="Processing steps">{steps}</div>',
+        unsafe_allow_html=True,
+    )
+
+
+st.markdown(
+    """
+    <div class="security-banner">
+      <div class="security-icon">✓</div>
+      <div><strong>Secure processing notice</strong><p>Gunakan hanya dokumen milik sendiri atau yang Anda berhak proses. Gambar dikirim ke provider AI melalui OpenRouter, diproses di memori, dan tidak disimpan sebagai file.</p></div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+consent = st.checkbox("Saya memiliki hak/izin untuk memproses dokumen ini dan memahami penggunaan layanan AI eksternal.")
+section_header("Upload document", "JPG, JPEG, atau PNG hingga 10 MB. Gunakan gambar tajam, tidak terpotong, dan minim pantulan.", "Step 1")
 uploaded = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
+render_workflow(3 if st.session_state.get("last_result") else (2 if uploaded else 1))
 
 if uploaded:
     content = uploaded.getvalue()
@@ -33,10 +60,27 @@ if uploaded:
     if st.session_state.get("upload_token") != upload_token:
         st.session_state["upload_token"] = upload_token
         st.session_state.pop("last_result", None)
-    left, right = st.columns([2, 1])
-    left.image(content, caption="Preview (ditampilkan hanya pada sesi ini)", width="stretch")
-    right.markdown("#### File metadata")
-    right.write({"name": safe_filename(uploaded.name), "type": uploaded.type, "size_kb": round(len(content) / 1024, 2)})
+    left, right = st.columns([1.75, 1], gap="large")
+    with left:
+        with st.container(border=True):
+            st.image(content, caption="Preview aman · hanya ditampilkan pada sesi ini", width="stretch")
+    with right:
+        with st.container(border=True):
+            st.markdown("#### File details")
+            st.markdown(
+                f"""
+                <div class="metadata-list">
+                  <div class="metadata-row"><span>File name</span><strong>{escape(safe_filename(uploaded.name))}</strong></div>
+                  <div class="metadata-row"><span>Format</span><strong>{escape(uploaded.type or 'Unknown')}</strong></div>
+                  <div class="metadata-row"><span>File size</span><strong>{len(content) / 1024:.2f} KB</strong></div>
+                  <div class="metadata-row"><span>Storage</span><strong>In-memory only</strong></div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            st.caption("File siap diproses" if consent else "Centang persetujuan untuk melanjutkan")
+
+    section_header("Run intelligence pipeline", "Klasifikasi berjalan lebih dahulu; OCR hanya dipanggil untuk KTP Indonesia.", "Step 2")
     if st.button("Process Document", type="primary", width="stretch", disabled=not consent):
         st.session_state.pop("last_result", None)
         if not cfg.openrouter_api_key:
@@ -80,42 +124,50 @@ if uploaded:
 
 result = st.session_state.get("last_result")
 if result:
-    st.caption(f"Request ID: `{result.request_id}`")
+    render_workflow(3)
+    section_header("Processing result", "Tinjau prediksi, hasil ekstraksi, dan alasan validasi secara terpisah.", "Completed")
+    st.caption(f"Request ID · `{result.request_id}`")
     if result.duplicate:
         st.warning(f"Dokumen dengan hash sama pernah diproses (ID {result.duplicate['id']}, {result.duplicate['processed_at']}).")
     classification = result.classification
     confidence = "N/A" if classification.confidence is None else f"{classification.confidence:.1%} (self-reported model)"
-    st.markdown("### Document Classification")
     st.markdown(
-        f"<div class='status-card'><b>Prediction:</b> {escape(classification.document_type)}<br>"
-        f"<b>Status:</b> {'Detected' if classification.is_ktp else 'BUKAN_KTP'}<br>"
-        f"<b>Confidence:</b> {escape(confidence)}<br><span class='muted'>{escape(classification.reason)}</span></div>",
+        f"<div class='status-card'><div class='status-grid'>"
+        f"<div class='status-item'><span>Prediction</span><strong>{escape(classification.document_type)}</strong></div>"
+        f"<div class='status-item'><span>Detection</span><strong>{'KTP detected' if classification.is_ktp else 'Not a KTP'}</strong></div>"
+        f"<div class='status-item'><span>Model confidence</span><strong>{escape(confidence)}</strong></div>"
+        f"<div class='status-item'><span>AI model</span><strong>{escape(classification.model or cfg.openrouter_model)}</strong></div>"
+        f"</div><span class='muted'>{escape(classification.reason)}</span></div>",
         unsafe_allow_html=True,
     )
     if result.stopped_after_classification:
         st.info("OCR dihentikan karena gambar tidak diklasifikasikan sebagai KTP Indonesia.")
     else:
-        st.markdown("### OCR Result")
         rows = []
         for name in IDENTITY_FIELDS:
             value = result.fields.get(name)
             rows.append({"Field": name.replace("_", " ").title(), "Value": value or "—"})
-        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
-        with st.expander("Show Raw vs Normalized OCR (PII masked)"):
+
+        ocr_tab, audit_tab, validation_tab = st.tabs(["Extracted fields", "Normalization audit", "Validation rules"])
+        with ocr_tab:
+            st.caption("Nilai sensitif dimasking pada tampilan ini.")
+            st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
+        with audit_tab:
+            st.caption("Perbandingan nilai mentah dan hasil normalisasi. Seluruh PII tetap dimasking.")
             safe_audit = json.loads(json.dumps(result.audit))
             st.json(safe_audit)
-        st.markdown("### Validation Result")
-        status = result.validation.status.replace("_", " ")
-        if result.validation.status == "VALID":
-            st.success(status)
-        elif result.validation.status == "INVALID":
-            st.error(status)
-        else:
-            st.warning(status)
-        st.dataframe(pd.DataFrame([rule.as_dict() for rule in result.validation.rules]), hide_index=True, width="stretch")
-        st.caption("Scope: rule-based format validation; bukan konfirmasi identitas ke Dukcapil.")
+        with validation_tab:
+            status = result.validation.status.replace("_", " ")
+            if result.validation.status == "VALID":
+                st.success(f"Validation status · {status}")
+            elif result.validation.status == "INVALID":
+                st.error(f"Validation status · {status}")
+            else:
+                st.warning(f"Validation status · {status}")
+            st.dataframe(pd.DataFrame([rule.as_dict() for rule in result.validation.rules]), hide_index=True, width="stretch")
+            st.caption("Rule-based format validation · bukan konfirmasi identitas ke Dukcapil.")
 
-if st.button("Reset session result"):
-    st.session_state.pop("last_result", None)
-    st.session_state.pop("upload_token", None)
-    st.rerun()
+    if st.button("Reset workspace", icon=":material/restart_alt:"):
+        st.session_state.pop("last_result", None)
+        st.session_state.pop("upload_token", None)
+        st.rerun()

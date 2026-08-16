@@ -78,13 +78,13 @@ Speaker note: This proves repeatability and safe testing, not real-world model p
 
 ## Slide 12 — Evaluation status
 
-Display N/A for model accuracy, OCR quality, latency, and cost.
+Display the completed synthetic run: 20/20 processed, 100% classification metrics, 139/140 populated OCR fields exact, and zero API/JSON errors.
 
-Speaker note: Make the absence a credibility point: no credential and no prediction rows mean no invented score.
+Speaker note: State the boundary clearly: these are reproducible controlled-fixture results and must not be generalized to real KTP photographs.
 
 ## Slide 13 — Verification evidence
 
-- 59 automated tests before final packaging;
+- 64 automated tests;
 - eight Streamlit entry points without exceptions;
 - local health check;
 - dataset integrity pass;
@@ -107,7 +107,7 @@ Speaker note: Explain one fix deeply, then summarize the rest.
 
 Verdict: NEEDS REVISION for production; strong local/portfolio evidence.
 
-Next steps: grant repository access, provision secrets/PostgreSQL, run evaluation, deploy/live-test, add RBAC/encryption/retention.
+Next steps: rotate the exposed key, grant repository access, provision platform secrets/PostgreSQL, deploy/live-test, and add RBAC/encryption/retention.
 
 Speaker note: End with a decision-ready ask: approve a controlled verification phase, not production release.
 
@@ -115,7 +115,7 @@ Speaker note: End with a decision-ready ask: approve a controlled verification p
 
 - Spend most time on architecture, evidence, and trade-offs.
 - Do not read all 18 fields or every rule.
-- Keep N/A visible; never apologize for refusing to invent metrics.
+- Keep N/A visible only for genuinely unavailable evidence such as live PostgreSQL/cloud behavior and production cost.
 - Use one synthetic image only, and show the SYNTHETIC marking.
 - If the API is unavailable, move immediately to the prepared fallback and explain why.
 - Close with the exact blockers and ownership needed to resolve them.

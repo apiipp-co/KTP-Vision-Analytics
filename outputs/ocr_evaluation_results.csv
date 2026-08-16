@@ -1,0 +1,181 @@
+experiment_id,image_id,image_condition,field_name,ground_truth,prediction,values_masked,exact_match,normalized_match,character_error_rate,is_missing,is_hallucinated
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,nik,9999********0001,9999********0001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,jenis_kelamin,LAKI-LAKI,LAKI-LAKI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_01,CLEAR,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,nik,9999********0002,9999********0002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,jenis_kelamin,PEREMPUAN,PEREMPUAN,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_02,DARK,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,nik,9999********0003,9999********0003,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,jenis_kelamin,LAKI-LAKI,LAKI-LAKI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_03,ROTATED,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,nik,9999********0004,9999********0004,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,jenis_kelamin,PEREMPUAN,PEREMPUAN,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_04,LOW_RESOLUTION,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,nik,9999********0005,9999********0005,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,jenis_kelamin,LAKI-LAKI,LAKI-LAKI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_05,BLUR,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,nik,9999********0006,9999********0006,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,jenis_kelamin,PEREMPUAN,PEREMPUAN,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_06,PARTIALLY_CROPPED,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,provinsi,PROVINSI SINTETIS,,True,False,False,1.0,True,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,nik,9999********0007,9999********0007,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,jenis_kelamin,LAKI-LAKI,LAKI-LAKI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_07,CLEAR,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,nik,9999********0008,9999********0008,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,jenis_kelamin,PEREMPUAN,PEREMPUAN,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_08,DARK,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,nik,9999********0009,9999********0009,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,nama,D*** S******* 0**,D*** S******* 0**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,jenis_kelamin,LAKI-LAKI,LAKI-LAKI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_09,ROTATED,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,provinsi,PROVINSI SINTETIS,PROVINSI SINTETIS,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,kabupaten_kota,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,nik,9999********0010,9999********0010,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,nama,D*** S******* 1**,D*** S******* 1**,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,tempat_lahir,KOTA C… [masked],KOTA C… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,tanggal_lahir,**-**-1990,**-**-1990,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,jenis_kelamin,PEREMPUAN,PEREMPUAN,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,golongan_darah,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,alamat,JALAN … [masked],JALAN … [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,rt,001,001,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,rw,002,002,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,kelurahan_desa,DESA S… [masked],DESA S… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,kecamatan,KECAMA… [masked],KECAMA… [masked],True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,agama,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,status_perkawinan,,,True,,,,True,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,pekerjaan,DATA TESTER,DATA TESTER,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,kewarganegaraan,WNI,WNI,True,True,True,0.0,False,False
+eval-20260816T210432Z-7e876b03,ktp_10,LOW_RESOLUTION,berlaku_hingga,**-**-****,**-**-****,True,True,True,0.0,False,False

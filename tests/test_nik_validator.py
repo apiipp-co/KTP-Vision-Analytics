@@ -1,3 +1,5 @@
+from datetime import date
+
 from src.validation.ktp_validator import validate_ktp
 from src.validation.nik_validator import RegionReference, derive_nik, validate_nik
 
@@ -71,3 +73,43 @@ def test_official_reference_miss_is_critical_when_reference_is_loaded(tmp_path):
     )
     assert result.status == "INVALID"
     assert by_name(result.rules)["region_code"].critical is True
+
+
+def test_lifetime_validity_is_valid():
+    result = validate_ktp(
+        {"nik": "3273011505900001", "tanggal_lahir": "1990-05-15", "jenis_kelamin": "LAKI-LAKI",
+         "berlaku_hingga": "SEUMUR HIDUP"},
+        reference_date=date(2026, 8, 17),
+    )
+    assert by_name(result.rules)["validity_status"].status == "VALID"
+    assert result.status == "VALID"
+
+
+def test_future_and_current_expiry_are_valid():
+    for value in ("2026-08-17", "31-12-2030"):
+        result = validate_ktp(
+            {"nik": "3273011505900001", "tanggal_lahir": "1990-05-15", "jenis_kelamin": "LAKI-LAKI",
+             "berlaku_hingga": value},
+            reference_date=date(2026, 8, 17),
+        )
+        assert by_name(result.rules)["validity_status"].status == "VALID"
+
+
+def test_expired_or_malformed_validity_is_invalid():
+    for value in ("2020-01-01", "TIDAK JELAS"):
+        result = validate_ktp(
+            {"nik": "3273011505900001", "tanggal_lahir": "1990-05-15", "jenis_kelamin": "LAKI-LAKI",
+             "berlaku_hingga": value},
+            reference_date=date(2026, 8, 17),
+        )
+        assert by_name(result.rules)["validity_status"].status == "INVALID"
+        assert result.status == "INVALID"
+
+
+def test_missing_validity_requires_review():
+    result = validate_ktp(
+        {"nik": "3273011505900001", "tanggal_lahir": "1990-05-15", "jenis_kelamin": "LAKI-LAKI"},
+        reference_date=date(2026, 8, 17),
+    )
+    assert by_name(result.rules)["validity_status"].status == "NOT_CHECKED"
+    assert result.status == "REVIEW_REQUIRED"

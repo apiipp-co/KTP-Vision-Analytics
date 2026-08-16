@@ -8,14 +8,16 @@ import plotly.express as px
 import streamlit as st
 
 from src.services.evaluation import compute_evaluation_metrics
-from src.ui_common import configure_page, sidebar_notice
+from src.ui_common import page_header, section_header, sidebar_notice
 from src.utils.config import PROJECT_ROOT
 
 
-configure_page("Model Evaluation")
 sidebar_notice()
-st.title("Model Evaluation")
-st.caption("Semua angka pada halaman ini hanya berasal dari prediction artifact aktual. Confidence adalah self-reported model, bukan probabilitas terkalibrasi.")
+page_header(
+    "Evidence lab",
+    "Measure the model, not the marketing.",
+    "Evaluasi klasifikasi dan OCR hanya dari prediction artifact aktual; confidence model bukan probabilitas terkalibrasi.",
+)
 
 results_path = PROJECT_ROOT / "outputs" / "evaluation_results.csv"
 summary_path = PROJECT_ROOT / "outputs" / "evaluation_summary.json"
@@ -33,9 +35,10 @@ except (OSError, ValueError, json.JSONDecodeError):
     st.stop()
 
 experiment = summary.get("experiment", {})
-st.markdown("### Experiment metadata")
+section_header("Experiment metadata", "Identitas eksperimen, dataset, model, dan versi prompt.", "Traceability")
 st.json({key: experiment.get(key) for key in ("experiment_id", "started_at", "completed_at", "model", "dataset_versions",
-                                                "classification_prompt_version", "ocr_prompt_version", "data_context")})
+                                                "classification_prompt_version", "ocr_prompt_version", "data_context",
+                                                "resumed_rows", "newly_processed_rows")})
 
 filters = st.columns(3)
 conditions = ["ALL", *sorted(results["image_condition"].dropna().astype(str).unique())]
@@ -53,11 +56,13 @@ if filtered.empty:
     st.stop()
 
 metrics = compute_evaluation_metrics(filtered)
-columns = st.columns(6)
-for column, (label, key) in zip(columns, [("Images", "total"), ("Accuracy", "accuracy"), ("Precision KTP", "precision_ktp"),
-                                                 ("Recall KTP", "recall_ktp"), ("F1 KTP", "f1_ktp"), ("Failed", "failed")]):
-    value = metrics.get(key)
-    column.metric(label, "N/A" if value is None else (f"{value:.2%}" if isinstance(value, float) else value))
+metric_items = [("Images", "total"), ("Accuracy", "accuracy"), ("Precision KTP", "precision_ktp"),
+                ("Recall KTP", "recall_ktp"), ("F1 KTP", "f1_ktp"), ("Failed", "failed")]
+for start in range(0, len(metric_items), 3):
+    columns = st.columns(3)
+    for column, (label, key) in zip(columns, metric_items[start:start + 3]):
+        value = metrics.get(key)
+        column.metric(label, "N/A" if value is None else (f"{value:.2%}" if isinstance(value, float) else value))
 
 matrix = metrics["confusion_matrix"]
 matrix_frame = pd.DataFrame([[matrix["tp"], matrix["fn"]], [matrix["fp"], matrix["tn"]]],
@@ -68,23 +73,30 @@ condition_frame = filtered.groupby("image_condition", dropna=False)["classificat
 right.plotly_chart(px.bar(condition_frame, x="image_condition", y="mean", hover_data=["count"], range_y=[0, 1],
                           title="Accuracy by image condition"), width="stretch")
 
-st.markdown("### OCR quality")
+section_header("OCR quality", "Exact match dan character error rate pada field yang memiliki ground truth.", "Field-level")
 if not ocr_path.exists():
     st.info("OCR evaluation artifact tidak tersedia.")
 else:
-    ocr = pd.read_csv(ocr_path)
-    ocr = ocr[ocr["image_id"].isin(filtered["image_id"])]
-    scored = ocr.dropna(subset=["exact_match"])
-    if scored.empty:
-        st.info("Tidak ada field ground truth yang dapat dinilai pada filter ini.")
+    try:
+        ocr = pd.read_csv(ocr_path)
+    except pd.errors.EmptyDataError:
+        ocr = pd.DataFrame()
+    required_ocr_columns = {"image_id", "exact_match", "field_name", "character_error_rate"}
+    if ocr.empty or not required_ocr_columns.issubset(ocr.columns):
+        st.info("OCR evaluation artifact belum berisi hasil yang dapat dinilai.")
     else:
-        field = scored.groupby("field_name").agg(exact_match_accuracy=("exact_match", "mean"),
-                                                  mean_cer=("character_error_rate", "mean"), samples=("exact_match", "size")).reset_index()
-        st.dataframe(field.sort_values("exact_match_accuracy"), hide_index=True, width="stretch")
-        st.plotly_chart(px.bar(field, x="field_name", y="exact_match_accuracy", hover_data=["mean_cer", "samples"],
-                               range_y=[0, 1], title="Field-level exact match"), width="stretch")
+        ocr = ocr[ocr["image_id"].isin(filtered["image_id"])]
+        scored = ocr.dropna(subset=["exact_match"])
+        if scored.empty:
+            st.info("Tidak ada field ground truth yang dapat dinilai pada filter ini.")
+        else:
+            field = scored.groupby("field_name").agg(exact_match_accuracy=("exact_match", "mean"),
+                                                      mean_cer=("character_error_rate", "mean"), samples=("exact_match", "size")).reset_index()
+            st.dataframe(field.sort_values("exact_match_accuracy"), hide_index=True, width="stretch")
+            st.plotly_chart(px.bar(field, x="field_name", y="exact_match_accuracy", hover_data=["mean_cer", "samples"],
+                                   range_y=[0, 1], title="Field-level exact match"), width="stretch")
 
-st.markdown("### Hardest cases")
+section_header("Hardest cases", "Kasus ber-confidence rendah atau prediksi yang tidak tepat untuk investigasi.", "Review queue")
 safe_columns = ["image_id", "expected_class", "predicted_class", "classification_correct", "image_condition",
                 "classification_confidence", "total_duration_ms", "error_type", "error_message"]
 st.dataframe(filtered.sort_values(["classification_correct", "classification_confidence"], ascending=[True, True])

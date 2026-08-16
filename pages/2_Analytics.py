@@ -7,10 +7,9 @@ import streamlit as st
 from src.analytics.insights import generate_insights
 from src.services.evaluation import load_evaluation_artifacts
 from src.services.analytics import completeness, dashboard_metrics, failure_analysis
-from src.ui_common import configure_page, require_repository, settings, sidebar_notice
+from src.ui_common import page_header, require_repository, section_header, settings, sidebar_notice
 
 
-configure_page("Analytics")
 sidebar_notice()
 cfg = settings()
 repo = require_repository(cfg.database_url)
@@ -30,15 +29,20 @@ if not documents.empty:
     validations = validations[validations["document_id"].isin(documents["id"])]
 metrics = dashboard_metrics(documents)
 
-st.title("Analytics Dashboard")
-columns = st.columns(6)
-for column, (label, key) in zip(columns, [
+page_header(
+    "Operations intelligence",
+    "Analytics that explain the workflow.",
+    "Pantau volume, hasil klasifikasi, kualitas field, durasi pemrosesan, dan usage model dari data aktual.",
+)
+section_header("Performance snapshot", "KPI mengikuti filter aktif dan dihitung langsung dari database.", "Live metrics")
+snapshot_items = [
     ("Total", "total"), ("KTP", "ktp"), ("Non-KTP", "non_ktp"),
     ("Valid", "valid"), ("Invalid", "invalid"), ("Review", "review"),
-]):
-    value = metrics[key]
-    percentage = (value / metrics["total"] * 100) if metrics["total"] else 0
-    column.metric(label, value, None if key == "total" else f"{percentage:.1f}% of filtered")
+]
+for start in range(0, len(snapshot_items), 3):
+    columns = st.columns(3)
+    for column, (label, key) in zip(columns, snapshot_items[start:start + 3]):
+        column.metric(label, metrics[key])
 
 if documents.empty:
     st.info("Belum ada data pemrosesan. Semua KPI berasal dari database dan tetap 0 sampai dokumen diproses.")
@@ -70,11 +74,11 @@ if quality.empty:
 else:
     right.plotly_chart(px.bar(quality, x="completeness_pct", y="field", orientation="h", range_x=[0, 100], title="OCR Data Completeness (%)"), width="stretch")
 
-st.markdown("### Automated insights")
+section_header("Automated insights", "Sinyal ringkas yang dihasilkan dari pola operasional saat ini.", "Insights")
 for insight in generate_insights(documents, quality):
     st.info(insight)
 
-st.markdown("### Actual Performance")
+section_header("Actual performance", "Latency aktual dari proses yang telah selesai.", "Observed")
 duration_columns = st.columns(4)
 for column, (label, key) in zip(duration_columns, [
     ("Average", "avg_ms"), ("Median", "median_ms"), ("Minimum", "min_ms"), ("Maximum", "max_ms"),
@@ -90,7 +94,7 @@ if not durations.empty:
 
 usage = documents[["input_tokens", "output_tokens", "total_tokens", "api_cost"]].apply(pd.to_numeric, errors="coerce")
 if usage.notna().any().any():
-    st.markdown("### API Usage (provider-reported)")
+    section_header("API usage", "Token dan biaya hanya ditampilkan bila dilaporkan oleh provider.", "Provider-reported")
     usage_cols = st.columns(4)
     usage_cols[0].metric("Input tokens", int(usage["input_tokens"].sum()))
     usage_cols[1].metric("Output tokens", int(usage["output_tokens"].sum()))
@@ -100,7 +104,7 @@ else:
     st.caption("Token/cost analysis: N/A — provider belum mengembalikan usage yang dapat disimpan.")
 
 _evaluation, evaluation_metrics = load_evaluation_artifacts()
-st.markdown("### Model Evaluation")
+section_header("Model evaluation", "Metrik eksperimen hanya ditampilkan ketika artifact inference tersedia.", "Evidence-based")
 if evaluation_metrics is None:
     st.info("Classification Accuracy, Precision, Recall, F1, dan Confusion Matrix: N/A — actual inference belum tersedia.")
 else:

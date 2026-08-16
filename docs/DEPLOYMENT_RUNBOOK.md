@@ -15,7 +15,7 @@ Required platform secrets:
 
 ```toml
 OPENROUTER_API_KEY = "your_api_key_here"
-OPENROUTER_MODEL = "google/gemini-2.5-flash"
+OPENROUTER_MODEL = "dots-studio/dots-3-note-preview:free"
 DATABASE_URL = "your_postgresql_database_url_here"
 OPENROUTER_TIMEOUT_SECONDS = 90
 OPENROUTER_MAX_RETRIES = 2

@@ -1,5 +1,7 @@
 # Final Jury Review
 
+> Historical score snapshot from 16 August 2026. Since this review, the project completed a 20/20-row OpenRouter evaluation, added expiry validation and bounded reasoning/output controls, passed 64 tests, and refreshed the UI. Deployment remains unpublished; use `README.md` and `DATASET_EVALUATION_REPORT.md` for current evidence.
+
 Project: KTP Vision Analytics
 Review date: 16 August 2026
 Review mode: repository-wide jury audit, red team, direct remediation, regression, documentation and presentation readiness

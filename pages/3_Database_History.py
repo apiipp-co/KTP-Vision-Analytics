@@ -7,32 +7,36 @@ import streamlit as st
 
 from src.services.analytics import export_columns, masked_history
 from src.utils.security import safe_csv_frame
-from src.ui_common import configure_page, require_repository, settings, sidebar_notice
+from src.ui_common import page_header, require_repository, settings, sidebar_notice
 
 
-configure_page("Database History")
 sidebar_notice()
 cfg = settings()
 repo = require_repository(cfg.database_url)
 raw = repo.history()
 data = masked_history(raw)
 
-st.title("Database History")
+page_header(
+    "Audit trail",
+    "Every processed document, traceable.",
+    "Telusuri riwayat pemrosesan, filter hasil, dan ekspor data yang sudah dimasking dengan aman.",
+)
 if data.empty:
     st.info("Belum ada dokumen tersimpan.")
     st.stop()
 
-filters = st.columns(6)
-search = filters[0].text_input("Search filename")
-document_type = filters[1].selectbox("Document type", ["ALL", *sorted(data["document_type"].dropna().unique())])
-validation_status = filters[2].selectbox("Validation", ["ALL", *sorted(data["validation_status"].dropna().unique())])
-page_size = filters[3].selectbox("Rows/page", [10, 25, 50, 100], index=1)
+primary_filters = st.columns(3)
+search = primary_filters[0].text_input("Search filename")
+document_type = primary_filters[1].selectbox("Document type", ["ALL", *sorted(data["document_type"].dropna().unique())])
+validation_status = primary_filters[2].selectbox("Validation", ["ALL", *sorted(data["validation_status"].dropna().unique())])
 processed_dates = pd.to_datetime(data["processed_at"], errors="coerce", utc=True).dt.date
 minimum_date = processed_dates.dropna().min()
 maximum_date = processed_dates.dropna().max()
 has_dates = pd.notna(minimum_date) and pd.notna(maximum_date)
-date_from = filters[4].date_input("From", value=minimum_date, min_value=minimum_date, max_value=maximum_date) if has_dates else None
-date_to = filters[5].date_input("To", value=maximum_date, min_value=minimum_date, max_value=maximum_date) if has_dates else None
+secondary_filters = st.columns(3)
+page_size = secondary_filters[0].selectbox("Rows per page", [10, 25, 50, 100], index=1)
+date_from = secondary_filters[1].date_input("From", value=minimum_date, min_value=minimum_date, max_value=maximum_date) if has_dates else None
+date_to = secondary_filters[2].date_input("To", value=maximum_date, min_value=minimum_date, max_value=maximum_date) if has_dates else None
 
 filtered = data.copy()
 if search:
@@ -48,11 +52,12 @@ if date_from and date_to:
     filtered = filtered[(filtered_dates >= date_from) & (filtered_dates <= date_to)]
 
 total_pages = max(1, math.ceil(len(filtered) / page_size))
-page = st.number_input("Page", min_value=1, max_value=total_pages, value=1)
+pagination, pagination_note = st.columns([1, 3], vertical_alignment="bottom")
+page = pagination.number_input("Page", min_value=1, max_value=total_pages, value=1)
+pagination_note.caption(f"{len(filtered)} record(s) · halaman {page} dari {total_pages}")
 start = (int(page) - 1) * page_size
 visible_columns = ["id", "file_name", "document_type", "nik_masked", "nama", "tanggal_lahir", "jenis_kelamin", "validation_status", "processed_at"]
 st.dataframe(filtered.iloc[start:start + page_size][visible_columns], hide_index=True, width="stretch")
-st.caption(f"{len(filtered)} record(s) · page {page}/{total_pages}")
 
 masked_csv = export_columns(raw[raw["id"].isin(filtered["id"])]).to_csv(index=False).encode("utf-8-sig")
 st.download_button("Download CSV — Masked Data", masked_csv, "ktp_history_masked.csv", "text/csv", type="primary")

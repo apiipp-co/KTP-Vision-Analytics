@@ -59,13 +59,13 @@ Open Data Quality, then Model Evaluation.
 
 Say:
 
-“The evaluation fixture set contains 20 generated images, balanced ten KTP-like and ten non-KTP, with six image conditions, hashes, consent metadata, and ground truth. Dataset validation passes. Model metrics remain N/A because no paid OpenRouter evaluation has been executed.”
+“The evaluation fixture set contains 20 generated images, balanced ten KTP-like and ten non-KTP, with six image conditions, hashes, consent metadata, and ground truth. Dataset validation passes. The actual OpenRouter run processed 20/20 rows: synthetic classification accuracy, precision, recall, and F1 were 100%, while OCR exact match was 139/140 populated fields. These are controlled-fixture results, not real-world claims.”
 
 ## 3:40–4:30 — Red-team proof
 
 Summarize:
 
-- 59 tests before final packaging;
+- 64 passing tests;
 - duplicate files stop before a paid production call;
 - malformed JSON and transient failures are covered;
 - legacy SQLite migrations are tested;
@@ -76,7 +76,7 @@ Summarize:
 
 Say:
 
-“The local engineering artifact is ready for supervised demonstration, but production approval is not requested today. The remaining gates are actual OpenRouter evaluation, Streamlit deployment with PostgreSQL, and production authentication, encryption, and retention controls.”
+“The local engineering artifact and synthetic OpenRouter evaluation are ready for supervised demonstration, but production approval is not requested today. The remaining gates are key rotation, Streamlit deployment with PostgreSQL, lawful representative evaluation, and production authentication, encryption, and retention controls.”
 
 ## Backup plan
 
@@ -85,7 +85,7 @@ If the app or network fails:
 1. show the retained dated local screenshots in docs/screenshots;
 2. show the architecture in README;
 3. show the latest test command output;
-4. show Model Evaluation N/A;
+4. show the committed sanitized Model Evaluation artifacts;
 5. state the failure honestly and continue with the evidence package.
 
 Screenshots are backup UI evidence, never simulated live inference.

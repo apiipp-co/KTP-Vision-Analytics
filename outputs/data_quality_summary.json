@@ -1,0 +1,23 @@
+{
+  "total_images": 20,
+  "class_distribution": {
+    "KTP": 10,
+    "NON_KTP": 10
+  },
+  "condition_distribution": {
+    "CLEAR": 4,
+    "DARK": 4,
+    "ROTATED": 4,
+    "LOW_RESOLUTION": 4,
+    "BLUR": 2,
+    "PARTIALLY_CROPPED": 2
+  },
+  "source_distribution": {
+    "SYNTHETIC": 20
+  },
+  "dataset_versions": [
+    "synthetic-v2.0.0"
+  ],
+  "issue_count": 0,
+  "status": "PASS"
+}

@@ -18,4 +18,9 @@ data/ground_truth/private/
 *.key
 outputs/*
 !outputs/.gitkeep
+!outputs/evaluation_results.csv
+!outputs/ocr_evaluation_results.csv
+!outputs/evaluation_summary.json
+!outputs/data_quality_report.csv
+!outputs/data_quality_summary.json
 .DS_Store
