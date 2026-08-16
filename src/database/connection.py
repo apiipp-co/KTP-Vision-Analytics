@@ -55,8 +55,6 @@ CREATE TABLE IF NOT EXISTS documents (
 CREATE INDEX IF NOT EXISTS idx_documents_hash ON documents(document_hash);
 CREATE INDEX IF NOT EXISTS idx_documents_processed ON documents(processed_at);
 CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(validation_status);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_documents_request_id ON documents(request_id) WHERE request_id IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_documents_context ON documents(data_context);
 
 CREATE TABLE IF NOT EXISTS extracted_fields (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -121,6 +119,8 @@ class Database:
                 conn.execute("ALTER TABLE documents ADD COLUMN request_id TEXT")
             if "data_context" not in columns:
                 conn.execute("ALTER TABLE documents ADD COLUMN data_context TEXT NOT NULL DEFAULT 'PRODUCTION'")
+            conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_documents_request_id ON documents(request_id) WHERE request_id IS NOT NULL")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_documents_context ON documents(data_context)")
 
 
 POSTGRES_SCHEMA = """

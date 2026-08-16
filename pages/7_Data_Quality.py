@@ -24,7 +24,10 @@ cols[0].metric("Images", dataset_summary["total_images"])
 cols[1].metric("Issues", dataset_summary["issue_count"])
 cols[2].metric("KTP", dataset_summary["class_distribution"].get("KTP", 0))
 cols[3].metric("Non-KTP", dataset_summary["class_distribution"].get("NON_KTP", 0))
-st.success("Dataset validation PASS") if not dataset_issues else st.error("Dataset validation FAIL")
+if dataset_issues:
+    st.error("Dataset validation FAIL")
+else:
+    st.success("Dataset validation PASS")
 if dataset_issues:
     st.dataframe(pd.DataFrame(dataset_issues), hide_index=True, width="stretch")
 st.dataframe(manifest[["image_id", "expected_class", "document_type", "source_type", "image_condition",

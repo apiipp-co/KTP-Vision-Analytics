@@ -54,7 +54,7 @@ visible_columns = ["id", "file_name", "document_type", "nik_masked", "nama", "ta
 st.dataframe(filtered.iloc[start:start + page_size][visible_columns], hide_index=True, width="stretch")
 st.caption(f"{len(filtered)} record(s) · page {page}/{total_pages}")
 
-masked_csv = export_columns(raw[raw["id"].isin(filtered["id"])]).to_csv(index=False).encode("utf-8")
+masked_csv = export_columns(raw[raw["id"].isin(filtered["id"])]).to_csv(index=False).encode("utf-8-sig")
 st.download_button("Download CSV — Masked Data", masked_csv, "ktp_history_masked.csv", "text/csv", type="primary")
 
 if cfg.demo_mode or not cfg.allow_sensitive_export:
@@ -65,4 +65,4 @@ else:
         confirmed = st.checkbox("Saya memahami risiko ekspor PII penuh")
         if confirmed:
             full = safe_csv_frame(raw[raw["id"].isin(filtered["id"])])
-            st.download_button("Download Sensitive CSV", full.to_csv(index=False).encode("utf-8"), "ktp_history_sensitive.csv", "text/csv")
+            st.download_button("Download Sensitive CSV", full.to_csv(index=False).encode("utf-8-sig"), "ktp_history_sensitive.csv", "text/csv")

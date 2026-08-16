@@ -10,7 +10,7 @@ import streamlit as st
 from src.ai.openrouter_client import OpenRouterClient, OpenRouterError
 from src.processing.image_processor import ImageValidationError
 from src.processing.json_parser import JSONParseError
-from src.services.pipeline import DocumentPipeline
+from src.services.pipeline import DocumentPipeline, DuplicateDocumentError
 from src.ui_common import configure_page, require_repository, settings, sidebar_notice
 from src.utils.constants import IDENTITY_FIELDS
 from src.utils.security import mask_identity_field, safe_filename, sha256_bytes
@@ -63,6 +63,9 @@ if uploaded:
                 if rule.expected_value:
                     rule.expected_value = "[masked]"
             st.session_state["last_result"] = safe_result
+        except DuplicateDocumentError as exc:
+            progress.empty()
+            st.warning(str(exc))
         except OpenRouterError as exc:
             repo.log_event("openrouter", "ERROR", str(exc))
             progress.empty()

@@ -1,13 +1,14 @@
 import io
 
 from PIL import Image
+import pytest
 
 from src.ai.openrouter_client import OpenRouterClient
 from src.database.connection import Database
 from src.database.repository import DocumentRepository
 from src.models import ClassificationResult, OCRResult
 from src.processing.json_parser import JSONParseError
-from src.services.pipeline import DocumentPipeline
+from src.services.pipeline import DocumentPipeline, DuplicateDocumentError
 
 
 def fixture_image():
@@ -72,3 +73,32 @@ def test_null_ocr_result_requires_review_and_does_not_crash(monkeypatch, tmp_pat
     assert result.validation.status == "REVIEW_REQUIRED"
     assert all(value is None for value in result.fields.values())
     assert repo.history().iloc[0]["validation_status"] == "REVIEW_REQUIRED"
+
+
+def test_duplicate_production_upload_stops_before_second_api_call(monkeypatch, tmp_path):
+    service, repo = pipeline(tmp_path)
+    calls = {"classification": 0}
+
+    def classify(*_):
+        calls["classification"] += 1
+        return ClassificationResult(False, "OTHER", None, "other")
+
+    monkeypatch.setattr("src.services.pipeline.classify_document", classify)
+    content = fixture_image()
+    service.process("first.jpg", content)
+    with pytest.raises(DuplicateDocumentError, match="tidak diulang"):
+        service.process("second.jpg", content)
+    assert calls["classification"] == 1
+    assert len(repo.history()) == 1
+
+
+def test_evaluation_context_can_reprocess_same_fixture(monkeypatch, tmp_path):
+    service, repo = pipeline(tmp_path)
+    service.data_context = "EVALUATION"
+    service.reject_duplicates = False
+    monkeypatch.setattr("src.services.pipeline.classify_document",
+                        lambda *_: ClassificationResult(False, "OTHER", None, "other"))
+    content = fixture_image()
+    service.process("one.jpg", content)
+    service.process("two.jpg", content)
+    assert len(repo.history()) == 2

@@ -1,3 +1,5 @@
+import sqlite3
+
 from src.database.connection import Database
 from src.database.repository import DocumentRepository
 from src.models import ClassificationResult, ValidationResult, ValidationSummary
@@ -37,3 +39,33 @@ def test_select_filter_limit_and_masked_export(tmp_path):
     log_id = repo.log_event("openrouter", "error", "safe error")
     assert log_id > 0
     assert repo.logs().iloc[0]["message"] == "safe error"
+
+
+def test_delete_document_cascades_related_rows(tmp_path):
+    repo = DocumentRepository(Database(tmp_path / "delete.db"))
+    classification = ClassificationResult(True, "KTP_INDONESIA", None, "visual")
+    validation = ValidationSummary("VALID", [ValidationResult("nik_length", "VALID", "ok")])
+    document_id = repo.save("delete.jpg", "delete-hash", classification, {"nik": "0012345678901234"},
+                            {"nik": {"raw_value": "0012345678901234", "normalized_value": "0012345678901234"}},
+                            validation, {"total_duration_ms": 1})
+    assert repo.delete_document(document_id) is True
+    assert repo.get_document(document_id) is None
+    assert repo.fields().empty
+    assert repo.validations().empty
+    assert repo.delete_document(document_id) is False
+
+
+def test_legacy_sqlite_schema_migrates_before_new_indexes(tmp_path):
+    path = tmp_path / "legacy.db"
+    with sqlite3.connect(path) as conn:
+        conn.execute("""CREATE TABLE documents (
+            id INTEGER PRIMARY KEY, file_name TEXT, document_hash TEXT, document_type TEXT,
+            is_ktp INTEGER, classification_result TEXT, validation_status TEXT,
+            uploaded_at TEXT, processed_at TEXT
+        )""")
+    Database(path).initialize()
+    with sqlite3.connect(path) as conn:
+        columns = {row[1] for row in conn.execute("PRAGMA table_info(documents)")}
+        indexes = {row[1] for row in conn.execute("PRAGMA index_list(documents)")}
+    assert {"classification_model", "request_id", "data_context"}.issubset(columns)
+    assert {"idx_documents_request_id", "idx_documents_context"}.issubset(indexes)

@@ -15,7 +15,7 @@ Status: `DEPLOYMENT BLOCKED`
 | Performance | 7/10 | Actual duration captured; production latency/cost unavailable |
 | Demo readiness | 9/10 | 20 synthetic fixtures, reset and safe defaults |
 
-Internal readiness score: **86/100**. This is an engineering self-assessment, not certification. Status remains `BLOCKED/NOT READY` because no production URL exists and critical OpenRouter/database/live flows have not been verified.
+This component checklist is superseded by the weighted final jury score of **79/100** in FINAL_JURY_REVIEW.md. The cap reflects unverified OpenRouter classification/OCR and deployment. Status remains BLOCKED/NOT READY because no production URL exists and critical OpenRouter/database/live flows have not been verified.
 
 External blockers:
 
@@ -28,8 +28,8 @@ Do not add a URL, badge, screenshot, accuracy, persistence result or live-test p
 
 Latest local evidence:
 
-- `python -m pytest -q`: 53 passed in the working environment.
-- Clean virtual environment install + tests: 53 passed.
+- `python -m pytest -q`: 59 passed in the working environment.
+- Clean virtual environment install from `requirements-dev.txt` + tests: 59 passed.
 - `python -m compileall`: PASS.
 - Streamlit AppTest: 8/8 entrypoints, zero exceptions.
 - Local Streamlit server: health `ok`, root HTTP 200.

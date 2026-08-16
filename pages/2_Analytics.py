@@ -27,6 +27,7 @@ if not documents.empty:
     if selected_model != "ALL": documents = documents[documents["classification_model"] == selected_model]
     if selected_status != "ALL": documents = documents[documents["validation_status"] == selected_status]
     if selected_type != "ALL": documents = documents[documents["document_type"] == selected_type]
+    validations = validations[validations["document_id"].isin(documents["id"])]
 metrics = dashboard_metrics(documents)
 
 st.title("Analytics Dashboard")

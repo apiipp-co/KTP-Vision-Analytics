@@ -19,5 +19,5 @@ Project portfolio untuk klasifikasi dokumen, OCR multimodal, data quality, dan a
 
 **Privacy**
 
-Gambar tidak disimpan. NIK dimasking pada tampilan dan export default. Database lokal tetap mengandung hasil ekstraksi untuk validasi; lindungi file database dan batasi aksesnya.
+Gambar tidak disimpan. NIK, nama, alamat, tempat/tanggal lahir dimasking pada tampilan umum dan export default. Database tetap mengandung hasil ekstraksi untuk validasi; lindungi database dan batasi aksesnya.
 """)

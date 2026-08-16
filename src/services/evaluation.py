@@ -7,6 +7,19 @@ from typing import Any
 import pandas as pd
 
 
+def _as_bool(value: Any) -> bool | None:
+    if value is None or (not isinstance(value, (list, dict)) and pd.isna(value)):
+        return None
+    if isinstance(value, bool):
+        return value
+    normalized = str(value).strip().casefold()
+    if normalized in {"true", "1", "yes"}:
+        return True
+    if normalized in {"false", "0", "no"}:
+        return False
+    return None
+
+
 def safe_exact(actual: str | None, expected: str | None) -> bool | None:
     """Compare only when ground truth contains a non-empty expected value."""
     if expected is None or not str(expected).strip():
@@ -44,7 +57,7 @@ def compute_evaluation_metrics(results: pd.DataFrame) -> dict[str, Any]:
     fp = int((~actual_positive & predicted_positive).sum())
     fn = int((actual_positive & ~predicted_positive).sum())
     tn = int((~actual_positive & ~predicted_positive & ~errors).sum())
-    correct = results[correct_column].map(lambda value: value is True or str(value).lower() == "true")
+    correct = results[correct_column].map(_as_bool).fillna(False)
     accuracy = float(correct.mean())
     precision = tp / (tp + fp) if tp + fp else None
     recall = tp / (tp + fn) if tp + fn else None
@@ -53,17 +66,19 @@ def compute_evaluation_metrics(results: pd.DataFrame) -> dict[str, Any]:
     exact_columns = [column for column in results if column.startswith("exact_")]
     field_accuracy: dict[str, float | None] = {}
     for column in exact_columns:
-        evaluated = results[column].dropna()
-        field_accuracy[column.removeprefix("exact_")] = float(evaluated.astype(bool).mean()) if not evaluated.empty else None
+        evaluated = results[column].map(_as_bool).dropna()
+        field_accuracy[column.removeprefix("exact_")] = float(evaluated.mean()) if not evaluated.empty else None
 
     present_columns = [column for column in results if column.startswith("present_")]
-    predicted_ktp = results[predicted_positive]
-    if present_columns and not predicted_ktp.empty:
-        presence = predicted_ktp[present_columns].apply(
-            lambda series: series.map(lambda value: value is True or str(value).lower() == "true")
-        )
-        completeness = float(presence.to_numpy().mean())
-        missing_rate = 1.0 - completeness
+    ocr_eligible = results[actual_positive & predicted_positive]
+    if present_columns and not ocr_eligible.empty:
+        presence = ocr_eligible[present_columns].apply(lambda series: series.map(_as_bool))
+        observed = presence.stack().dropna()
+        completeness = float(observed.mean()) if not observed.empty else None
+        if completeness is None:
+            missing_rate = None
+        else:
+            missing_rate = 1.0 - completeness
     else:
         completeness = None
         missing_rate = None
@@ -71,11 +86,11 @@ def compute_evaluation_metrics(results: pd.DataFrame) -> dict[str, Any]:
     error_counts = {
         "False Positive": fp,
         "False Negative": fn,
-        "OCR Error": int(results[exact_columns].eq(False).any(axis=1).sum()) if exact_columns else 0,
-        "Missing Field": int(results[present_columns].eq(False).any(axis=1).sum()) if present_columns else 0,
+        "OCR Error": int(results[exact_columns].apply(lambda series: series.map(_as_bool)).eq(False).any(axis=1).sum()) if exact_columns else 0,
+        "Missing Field": int(ocr_eligible[present_columns].apply(lambda series: series.map(_as_bool)).eq(False).any(axis=1).sum()) if present_columns else 0,
         "JSON Error": int((results.get("parse_status", pd.Series(index=results.index, dtype=object)) == "FAILED").sum()),
-        "Validation Error": int((results.get("validation", pd.Series(index=results.index, dtype=object)) == "INVALID").sum()),
-        "API Error": int(results.get("error", pd.Series(index=results.index, dtype=object)).astype(str).str.contains("OpenRouterError", regex=False).sum()),
+        "Validation Error": int((results.get("validation_status", results.get("validation", pd.Series(index=results.index, dtype=object))) == "INVALID").sum()),
+        "API Error": int(results.get("error_type", results.get("error", pd.Series(index=results.index, dtype=object))).astype(str).str.contains("OpenRouterError", regex=False).sum()),
     }
     error_analysis = [
         {"error_type": name, "count": count, "percentage": count / len(results) * 100}
@@ -148,7 +163,7 @@ def operational_error_analysis(documents: pd.DataFrame, validations: pd.DataFram
         add("False Positive", int((~expected_ktp & predicted_ktp).sum()), len(evaluation), "evaluation")
         add("False Negative", int((expected_ktp & ~predicted_ktp).sum()), len(evaluation), "evaluation")
         exact = [column for column in evaluation if column.startswith("exact_")]
-        add("OCR Error", int(evaluation[exact].eq(False).any(axis=1).sum()) if exact else 0, len(evaluation), "evaluation")
+        add("OCR Error", int(evaluation[exact].apply(lambda series: series.map(_as_bool)).eq(False).any(axis=1).sum()) if exact else 0, len(evaluation), "evaluation")
         error_series = evaluation.get("error_type", evaluation.get("error", pd.Series(index=evaluation.index, dtype=object)))
         add("API Error", int(error_series.astype(str).str.contains("OpenRouterError", regex=False).sum()), len(evaluation), "evaluation")
     return pd.DataFrame(rows)

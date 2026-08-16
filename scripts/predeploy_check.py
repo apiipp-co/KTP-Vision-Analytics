@@ -18,7 +18,7 @@ from src.utils.config import Settings
 
 
 TEXT_SUFFIXES = {".py", ".md", ".toml", ".txt", ".yml", ".yaml", ".json", ".csv", ".example"}
-SKIP_PARTS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", "outputs"}
+SKIP_PARTS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache"}
 
 
 def check(name: str, status: str, detail: str) -> dict[str, str]:

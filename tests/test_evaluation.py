@@ -20,6 +20,22 @@ def test_new_evaluation_column_contract_is_supported():
     assert metrics["processed_successfully"] == 0
 
 
+def test_csv_boolean_strings_and_current_error_columns_are_handled_correctly():
+    rows = pd.DataFrame([
+        {"expected_class": "KTP", "predicted_class": "KTP", "classification_correct": "True",
+         "exact_nik": "False", "present_nik": "True", "validation_status": "INVALID", "error_type": ""},
+        {"expected_class": "NON_KTP", "predicted_class": "KTP", "classification_correct": "False",
+         "exact_nik": None, "present_nik": "False", "validation_status": "NOT_APPLICABLE", "error_type": "OpenRouterError"},
+    ])
+    metrics = compute_evaluation_metrics(rows)
+    assert metrics["accuracy"] == 0.5
+    assert metrics["field_exact_match"]["nik"] == 0.0
+    assert metrics["ocr_data_completeness"] == 1.0
+    errors = {item["error_type"]: item["count"] for item in metrics["error_analysis"]}
+    assert errors["Validation Error"] == 1
+    assert errors["API Error"] == 1
+
+
 def test_actual_result_metrics_and_missing_rates_are_computed():
     results = pd.DataFrame([
         {"expected_class": "KTP", "prediction": "KTP", "correct": True,

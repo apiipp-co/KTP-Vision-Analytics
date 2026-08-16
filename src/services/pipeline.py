@@ -22,6 +22,12 @@ from src.validation.ktp_validator import validate_ktp
 ProgressCallback = Callable[[str, float], None]
 
 
+class DuplicateDocumentError(ValueError):
+    def __init__(self, duplicate: dict[str, Any]):
+        self.duplicate = duplicate
+        super().__init__(f"Dokumen identik sudah diproses sebagai record ID {duplicate['id']}; request AI tidak diulang.")
+
+
 @dataclass
 class PipelineResult:
     request_id: str
@@ -39,12 +45,14 @@ class PipelineResult:
 
 class DocumentPipeline:
     def __init__(self, client: OpenRouterClient, repository: DocumentRepository, max_image_size_mb: int = 10,
-                 max_image_pixels: int = 20_000_000, data_context: str = "PRODUCTION"):
+                 max_image_pixels: int = 20_000_000, data_context: str = "PRODUCTION",
+                 reject_duplicates: bool | None = None):
         self.client = client
         self.repository = repository
         self.max_image_size_mb = max_image_size_mb
         self.max_image_pixels = max_image_pixels
         self.data_context = data_context if data_context in {"PRODUCTION", "EVALUATION"} else "PRODUCTION"
+        self.reject_duplicates = self.data_context == "PRODUCTION" if reject_duplicates is None else reject_duplicates
 
     def process(self, file_name: str, content: bytes, progress: ProgressCallback | None = None) -> PipelineResult:
         notify = progress or (lambda _message, _value: None)
@@ -54,6 +62,8 @@ class DocumentPipeline:
         image = validate_and_prepare_image(content, self.max_image_size_mb, max_pixels=self.max_image_pixels)
         document_hash = sha256_bytes(content)
         duplicate = self.repository.find_duplicate(document_hash)
+        if duplicate and self.reject_duplicates:
+            raise DuplicateDocumentError(duplicate)
 
         notify("Mengklasifikasikan dokumen", 0.25)
         classification = classify_document(self.client, image.content, image.mime_type)

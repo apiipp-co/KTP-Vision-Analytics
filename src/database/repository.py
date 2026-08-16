@@ -96,6 +96,12 @@ class DocumentRepository:
             row = conn.execute(self._sql("SELECT * FROM documents WHERE id = ?"), (document_id,)).fetchone()
         return dict(row) if row else None
 
+    def delete_document(self, document_id: int) -> bool:
+        """Delete one document and its cascaded field/validation rows."""
+        with self.db.connect() as conn:
+            cursor = conn.execute(self._sql("DELETE FROM documents WHERE id = ?"), (document_id,))
+            return cursor.rowcount > 0
+
     def log_event(self, stage: str, level: str, message: str, document_id: int | None = None) -> int:
         created_at = datetime.now(timezone.utc).isoformat()
         safe_stage = str(stage)[:50]

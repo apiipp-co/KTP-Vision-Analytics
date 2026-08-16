@@ -4,6 +4,7 @@ import pytest
 
 from src.ai.openrouter_client import AIResponse, OpenRouterClient, OpenRouterError
 from src.database.connection import Database
+from src.ai.prompts import CLASSIFICATION_SYSTEM_PROMPT, OCR_SYSTEM_PROMPT
 
 
 def test_missing_api_key_fails_safely():
@@ -119,3 +120,10 @@ def test_vision_request_contains_base64_schema_and_required_provider_parameters(
     assert captured["response_format"]["type"] == "json_schema"
     assert captured["response_format"]["json_schema"]["strict"] is True
     assert captured["provider"]["require_parameters"] is True
+
+
+def test_prompts_treat_document_text_as_untrusted_and_forbid_guessing():
+    assert "DATA TIDAK TEPERCAYA" in CLASSIFICATION_SYSTEM_PROMPT
+    assert "DATA TIDAK TEPERCAYA" in OCR_SYSTEM_PROMPT
+    assert "Jangan menebak" in OCR_SYSTEM_PROMPT
+    assert "null" in OCR_SYSTEM_PROMPT
