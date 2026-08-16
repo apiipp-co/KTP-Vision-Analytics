@@ -1,0 +1,11 @@
+{
+  "dataset_version": "synthetic-v2.0.0",
+  "generated_at": "2026-08-16T04:46:17.873695+00:00",
+  "sample_count": 20,
+  "ktp_count": 10,
+  "non_ktp_count": 10,
+  "source_type": "SYNTHETIC",
+  "contains_real_pii": false,
+  "license": "Project-generated test fixtures",
+  "limitations": "Not representative of real camera, demographic, print, damage, or fraud variation."
+}

@@ -1,0 +1,20 @@
+{
+  "provinsi": "PROVINSI SINTETIS",
+  "kabupaten_kota": null,
+  "nik": "9999995405900004",
+  "nama": "DATA SINTETIS 04",
+  "tempat_lahir": "KOTA CONTOH",
+  "tanggal_lahir": "14-05-1990",
+  "jenis_kelamin": "PEREMPUAN",
+  "golongan_darah": null,
+  "alamat": "JALAN CONTOH DATA UJI",
+  "rt": "001",
+  "rw": "002",
+  "kelurahan_desa": "DESA SINTETIS",
+  "kecamatan": "KECAMATAN CONTOH",
+  "agama": null,
+  "status_perkawinan": null,
+  "pekerjaan": "DATA TESTER",
+  "kewarganegaraan": "WNI",
+  "berlaku_hingga": "SEUMUR HIDUP"
+}

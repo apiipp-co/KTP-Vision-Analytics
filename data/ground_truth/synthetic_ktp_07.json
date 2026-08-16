@@ -1,0 +1,20 @@
+{
+  "provinsi": "PROVINSI SINTETIS",
+  "kabupaten_kota": null,
+  "nik": "9999991705900007",
+  "nama": "DATA SINTETIS 07",
+  "tempat_lahir": "KOTA CONTOH",
+  "tanggal_lahir": "17-05-1990",
+  "jenis_kelamin": "LAKI-LAKI",
+  "golongan_darah": null,
+  "alamat": "JALAN CONTOH DATA UJI",
+  "rt": "001",
+  "rw": "002",
+  "kelurahan_desa": "DESA SINTETIS",
+  "kecamatan": "KECAMATAN CONTOH",
+  "agama": null,
+  "status_perkawinan": null,
+  "pekerjaan": "DATA TESTER",
+  "kewarganegaraan": "WNI",
+  "berlaku_hingga": "SEUMUR HIDUP"
+}
