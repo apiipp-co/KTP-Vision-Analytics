@@ -239,7 +239,9 @@ ALLOW_SENSITIVE_EXPORT = false
 
 4. Deploy, inspect build/runtime logs, then execute the live test matrix in `docs/DEPLOYMENT_RUNBOOK.md` with synthetic/authorized images.
 
-Current deployment status: **BLOCKED**. No standalone GitHub repository/remote, Streamlit Cloud authenticated session, valid OpenRouter key, or production `DATABASE_URL` is available in this workspace. No production URL or live result is claimed.
+Repository: [apiipp-co/ktp-vision-analytics](https://github.com/apiipp-co/ktp-vision-analytics) (`main`, private).
+
+Current deployment status: **BLOCKED**. Streamlit Cloud is authenticated, but its GitHub App cannot currently see the new private repository. A valid OpenRouter key and production `DATABASE_URL` are also unavailable. No production URL or live result is claimed.
 
 ## Retention and deletion
 

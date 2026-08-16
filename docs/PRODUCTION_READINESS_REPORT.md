@@ -21,8 +21,8 @@ External blockers:
 
 1. No valid `OPENROUTER_API_KEY` in the environment.
 2. No production PostgreSQL `DATABASE_URL`.
-3. The project is not a standalone GitHub repository with a configured remote.
-4. No authenticated Streamlit Community Cloud deployment session is available.
+3. GitHub remote exists at `apiipp-co/ktp-vision-analytics`, but it is private and the Streamlit GitHub App cannot currently see it; repository access or public visibility must be explicitly selected.
+4. Streamlit Community Cloud is authenticated and the deployment form is reachable, but final app creation is blocked by repository access and missing runtime secrets.
 
 Do not add a URL, badge, screenshot, accuracy, persistence result or live-test pass until these blockers are removed and the runbook is executed.
 
@@ -35,3 +35,5 @@ Latest local evidence:
 - Local Streamlit server: health `ok`, root HTTP 200.
 - Dataset integrity: 20/20 files readable with matching SHA-256.
 - Predeploy secret patterns: no matches; `.env` and `secrets.toml` absent.
+- GitHub: standalone private repository initialized, committed and pushed to `main`.
+- Streamlit Cloud: authenticated; repository visibility/access validation blocks the Deploy button.
