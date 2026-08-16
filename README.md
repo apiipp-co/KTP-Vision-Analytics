@@ -6,7 +6,11 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.38%2B-FF4B4B)
 ![Tests](https://img.shields.io/badge/tests-64%20passed-success)
 ![AI evaluation](https://img.shields.io/badge/AI%20evaluation-20%2F20-success)
-![Deployment](https://img.shields.io/badge/deployment-ready%2C%20not%20published-orange)
+[![Deployment](https://img.shields.io/badge/deployment-live-success)](https://ktp-vision-analytics.streamlit.app/)
+
+**Live demo:** [ktp-vision-analytics.streamlit.app](https://ktp-vision-analytics.streamlit.app/)
+
+[Open application](https://ktp-vision-analytics.streamlit.app/) · [Upload workspace](https://ktp-vision-analytics.streamlit.app/Upload_KTP) · [Model evaluation](https://ktp-vision-analytics.streamlit.app/Model_Evaluation)
 
 KTP Vision Analytics is a production-oriented Streamlit application that classifies an uploaded image before conditionally extracting 18 KTP fields. It then normalizes the output, applies transparent Python rules, stores auditable results, and presents privacy-aware analytics.
 
@@ -64,7 +68,7 @@ Out of scope:
 
 ## Screenshots
 
-The images below are actual local application captures from 16 August 2026. They show empty or synthetic states; none is presented as a deployed production result.
+The images below are actual local application captures from 16 August 2026. The current privacy-safe demo is also available through the [live Streamlit deployment](https://ktp-vision-analytics.streamlit.app/).
 
 ### Home
 
@@ -263,7 +267,7 @@ Five evidence-based findings:
 2. Finding: classification separated all synthetic classes. Evidence: TP=10, TN=10, FP=0, FN=0. Interpretation: the configured model routes this controlled fixture set correctly. Action: do not generalize 100% synthetic accuracy to real KTP photographs.
 3. Finding: OCR matched 139 of 140 populated truth fields. Evidence: mean CER 0.71%, with the only exact mismatch in `provinsi`. Interpretation: structured extraction is strong on these fixtures but not flawless. Action: keep deterministic validation and human review.
 4. Finding: non-KTP routing saves an OCR request. Evidence: all ten non-KTP rows stopped after classification. Interpretation: the classification gate reduces unnecessary inference and PII extraction. Action: retain this invariant in regression tests.
-5. Finding: public deployment remains external work. Evidence: no live URL or production PostgreSQL connection is available. Interpretation: local readiness is not live readiness. Action: rotate the exposed key, provision platform secrets/PostgreSQL, publish, and run the live matrix.
+5. Finding: the Streamlit demo is publicly reachable. Evidence: the live Overview, Upload, and Model Evaluation routes render successfully. Interpretation: cloud UI/runtime readiness is verified, while durable PostgreSQL persistence and live secret-backed inference remain separate gates. Action: configure a rotated OpenRouter secret, use only synthetic/authorized inputs, and add PostgreSQL before durable production use.
 
 ## Testing
 
@@ -371,23 +375,24 @@ For production prerequisites:
 
 ## Deployment status
 
-Target: Streamlit Community Cloud, app.py, Python 3.12, PostgreSQL, secrets stored in platform settings.
+Platform: Streamlit Community Cloud, `app.py`, Python runtime managed by Streamlit.
 
-Current status: READY FOR ACCOUNT-SIDE DEPLOYMENT, not yet published.
+Current status: **LIVE DEMO PUBLISHED**
 
-- The Streamlit account is authenticated, but its GitHub App cannot see the private repository.
-- Local OpenRouter connectivity and single-document classification/OCR have been verified; the deployment still needs a fresh rotated secret.
-- No production PostgreSQL DATABASE_URL was available.
-- Consequently there is no live URL, production PostgreSQL persistence claim, or cloud runtime evidence. The repository does include a completed local 20-image OpenRouter evaluation.
+- Live URL: [https://ktp-vision-analytics.streamlit.app/](https://ktp-vision-analytics.streamlit.app/)
+- Verified live routes include Overview, Upload KTP, and Model Evaluation.
+- The deployed interface, navigation, and committed sanitized 20-image evaluation artifacts render successfully.
+- Live AI processing requires a fresh rotated `OPENROUTER_API_KEY` in Streamlit Secrets; secrets must never be committed to Git.
+- The demo currently uses SQLite, whose filesystem is not durable across Streamlit restarts. PostgreSQL remains the durable deployment target.
+- This is a privacy-safe demonstration, not an authenticated production identity-processing service.
 
-Resolution sequence:
+Live completion sequence:
 
-1. Grant the Streamlit GitHub App access to apiipp-co/ktp-vision-analytics or choose an approved visibility strategy.
-2. Provision an OpenRouter key and a TLS-enabled PostgreSQL database through secret management.
-3. Run the strict pre-deployment check.
-4. Deploy and inspect build/runtime logs.
-5. Execute the complete live test matrix in docs/DEPLOYMENT_RUNBOOK.md using only synthetic/authorized inputs.
-6. Add the verified URL and dated evidence only after every critical check passes.
+1. Rotate the previously exposed OpenRouter key and save the new key only in Streamlit Secrets.
+2. Confirm the deployed model matches the evaluated model before making model-quality comparisons.
+3. Execute a live upload test using only a bundled synthetic fixture.
+4. Provision a TLS-enabled PostgreSQL database if records must survive app restarts.
+5. Execute the complete live matrix in `docs/DEPLOYMENT_RUNBOOK.md` and retain dated evidence.
 
 ## Limitations and roadmap
 
@@ -399,13 +404,13 @@ Known limitations:
 - current official region data is not bundled, so region validation is NOT_CHECKED;
 - no lawful Dukcapil verification API is connected;
 - authentication/RBAC and field-level encryption are not implemented;
-- PostgreSQL and actual OpenRouter behavior remain unverified without credentials;
-- the private repository and missing secrets currently block live deployment.
+- PostgreSQL persistence remains unverified in the live deployment;
+- live AI inference remains unavailable until a rotated key is configured in Streamlit Secrets.
 
 Prioritized roadmap:
 
-1. unblock repository access, provision secrets, and complete live verification;
-2. execute and publish a versioned 20-image OpenRouter evaluation;
+1. configure a rotated Streamlit secret and complete synthetic live-inference verification;
+2. provision and verify durable PostgreSQL persistence;
 3. add authentication, role-based authorization, field encryption, retention jobs, and backup deletion;
 4. ingest an authoritative region reference with source version and checksum;
 5. add human-review queues and correction audit trails;
